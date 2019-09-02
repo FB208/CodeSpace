@@ -36,7 +36,7 @@ namespace WebMvc.Emit
 
             //
             object result = methodInfo.Invoke(obj, new object[] {"张三" });
-
+           
         }
     }
 }
