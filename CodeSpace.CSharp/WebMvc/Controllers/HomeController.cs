@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebMvc.Emit;
 using WebMvc.Filter;
 using WebMvc.Models;
 
@@ -14,6 +15,11 @@ namespace WebMvc.Controllers
         [Action]
         public IActionResult Index()
         {
+            new PersonEmit().Do();
+
+            
+            //
+            
             return View();
         }
 
