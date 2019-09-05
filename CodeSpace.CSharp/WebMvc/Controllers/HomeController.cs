@@ -2,25 +2,37 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebMvc.Emit;
 using WebMvc.Filter;
 using WebMvc.Models;
+using WebMvc.Model.BBSAdmin;
 
 namespace WebMvc.Controllers
 {
     public class HomeController : Controller
     {
-        [Action]
-        public IActionResult Index()
+
+        //构造函数注入上下文
+        private readonly BBSAdminContext _context;
+        public HomeController(BBSAdminContext Context)
         {
-            new PersonEmit().Do();
+            _context = Context;
+        }
+        [Action]
+        public async Task<IActionResult> Index()
+        {
+            List<UserTable> model = _context.UserTable.ToList();
+  
+
+            //new PersonEmit().Do();
 
             
             //
             
-            return View();
+            return View(model);
         }
 
         public IActionResult Privacy()
