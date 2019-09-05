@@ -3,7 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
+using Microsoft.Extensions.Options;
+using WebMvc.Model.BBSAdmin;
+using WebMvc.Common.StaticTools;
 
 namespace WebMvc.DAL.BBSAdmin
 {
@@ -17,7 +21,11 @@ namespace WebMvc.DAL.BBSAdmin
             DbContext dbContext = Common.StaticTools.CallContext.GetData("DbContext") as DbContext;
             if (dbContext == null)
             {
-                dbContext = new Model.BBSAdmin.BBSAdminContext();
+                string connectionString = new AppConfigurationServices().GetConfiguration().GetConnectionString("BBSAdminConnection");
+                var optionsBuilder = new DbContextOptionsBuilder<Model.BBSAdmin.BBSAdminContext>()
+                .UseSqlServer(connectionString)
+                .Options;
+                dbContext = new Model.BBSAdmin.BBSAdminContext(optionsBuilder);
                 Common.StaticTools.CallContext.SetData("DbContext", dbContext);
             }
             return dbContext;

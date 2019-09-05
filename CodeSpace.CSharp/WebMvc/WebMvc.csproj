@@ -21,4 +21,11 @@
     <ProjectReference Include="..\WebMvc.Model\WebMvc.Model\WebMvc.Model.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
