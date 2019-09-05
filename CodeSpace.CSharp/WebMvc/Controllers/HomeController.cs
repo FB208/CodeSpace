@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebMvc.Emit;
 using WebMvc.Filter;
-using WebMvc.Models;
+using WebMvc.ViewModel;
 using WebMvc.Model.BBSAdmin;
 
 namespace WebMvc.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
 
         //构造函数注入上下文

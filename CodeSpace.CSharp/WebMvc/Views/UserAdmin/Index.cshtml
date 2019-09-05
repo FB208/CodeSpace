@@ -1,0 +1,12 @@
+﻿@model List<WebMvc.Model.BBSAdmin.UserTable>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@foreach (var item in Model)
+{
+    @item.Name
+}
+
