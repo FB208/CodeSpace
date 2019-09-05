@@ -8,4 +8,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\WebMvc.Common\WebMvc.Common\WebMvc.Common.csproj" />
+    <ProjectReference Include="..\..\WebMvc.Model\WebMvc.Model\WebMvc.Model.csproj" />
+    <ProjectReference Include="..\WebMvc.IDAL\WebMvc.IDAL.csproj" />
+  </ItemGroup>
+
 </Project>
