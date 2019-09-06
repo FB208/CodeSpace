@@ -34,6 +34,7 @@ namespace WebMvc.DALContainer
             var builder = new ContainerBuilder();
             //格式：builder.RegisterType<xxxx>().As<Ixxxx>().InstancePerLifetimeScope();
             builder.RegisterType<UserTableDAL>().As<IUserTableDAL>().InstancePerLifetimeScope();
+            builder.RegisterType<KeywordsDAL>().As<IKeywordsDAL>().InstancePerLifetimeScope();
             container = builder.Build();
         }
     }

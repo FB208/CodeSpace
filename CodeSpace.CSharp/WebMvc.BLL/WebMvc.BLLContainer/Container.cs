@@ -44,6 +44,7 @@ namespace WebMvc.BLLContainer
             var builder = new ContainerBuilder();
             //格式：builder.RegisterType<xxxx>().As<Ixxxx>().InstancePerLifetimeScope();
             builder.RegisterType<UserTableService>().As<IUserTableService>().InstancePerLifetimeScope();
+            builder.RegisterType<KeywordsService>().As<IKeywordsService>().InstancePerLifetimeScope();
             container = builder.Build();
         }
     }
