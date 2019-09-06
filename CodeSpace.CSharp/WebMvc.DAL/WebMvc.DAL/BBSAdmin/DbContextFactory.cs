@@ -23,7 +23,7 @@ namespace WebMvc.DAL.BBSAdmin
             {
                 string connectionString = new AppConfigurationServices().GetConfiguration().GetConnectionString("BBSAdminConnection");
                 var optionsBuilder = new DbContextOptionsBuilder<Model.BBSAdmin.BBSAdminContext>()
-                .UseSqlServer(connectionString)
+                .UseSqlServer(connectionString,o=>o.UseRowNumberForPaging())
                 .Options;
                 dbContext = new Model.BBSAdmin.BBSAdminContext(optionsBuilder);
                 Common.StaticTools.CallContext.SetData("DbContext", dbContext);
