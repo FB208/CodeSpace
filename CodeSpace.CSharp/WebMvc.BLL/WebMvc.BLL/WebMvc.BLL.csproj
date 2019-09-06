@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\WebMvc.DAL\WebMvc.DALContainer\WebMvc.DALContainer.csproj" />
     <ProjectReference Include="..\..\WebMvc.DAL\WebMvc.IDAL\WebMvc.IDAL.csproj" />
+    <ProjectReference Include="..\WebMvc.IBLL\WebMvc.IBLL.csproj" />
   </ItemGroup>
 
 </Project>
