@@ -25,8 +25,9 @@ namespace WebMvc.Controllers
         public async Task<IActionResult> Index()
         {
             List<UserTable> model = _context.UserTable.ToList();
-  
 
+           
+            
             //new PersonEmit().Do();
 
             

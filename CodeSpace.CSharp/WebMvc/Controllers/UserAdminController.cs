@@ -34,7 +34,8 @@ namespace WebMvc.Controllers
         [HttpPost]
         public IActionResult Create(UserAdminVM vm)
         {
-            UserTable user = vm.GetUserTable();
+            UserTable user = new UserTable();
+            user = vm.GetUserTable(user);
             bool result = userTableService.Add(user);
             if (result)
             {
@@ -68,6 +69,33 @@ namespace WebMvc.Controllers
             }
             TempData["AlertMsg"] = "对象已被删除";
             return Redirect("/UserAdmin/Index");
+        }
+        public IActionResult Edit(string id)
+        {
+            UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
+            UserAdminVM vm = new UserAdminVM();
+            if (user!=null)
+            {
+                vm= vm.GetVM(user);
+            }
+            return View(vm);
+        }
+        [HttpPost]
+        public IActionResult Edit(string uuid, UserAdminVM vm)
+        {
+            UserTable user = userTableService.GetModels(m => m.Uuid == uuid).FirstOrDefault();
+            vm.GetUserTable(user);
+            bool result = userTableService.Update(user);
+            if (result)
+            {
+                TempData["AlertMsg"] = "保存成功";
+                TempData["Href"] = "/UserAdmin/Index";
+            }
+            else
+            {
+                TempData["AlertMsg"] = "保存失败";
+            }
+            return View(vm);
         }
     }
 }

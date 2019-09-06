@@ -14,17 +14,24 @@ namespace WebMvc.ViewModel
     {
         private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         private IKeywordsService keywordsService = BLLContainer.Container.Resolve<IKeywordsService>();
+        List<Keywords> keywords;
+        public UserAdminVM(){
+            keywords = keywordsService.GetModels(m => m.KeyType == "RoleFlag").ToList();
+        }
+        
         private string uuid;
-        public string Uuid {
-            get {
-                return uuid??Guid.NewGuid().ToString();
+        public string Uuid
+        {
+            get
+            {
+                return uuid ?? Guid.NewGuid().ToString();
             }
             set
             {
                 uuid = value;
             }
         }
-        [Display(Name ="账号")]
+        [Display(Name = "账号")]
         public string UserName { get; set; }
         [Display(Name = "昵称")]
         public string NickName { get; set; }
@@ -33,11 +40,13 @@ namespace WebMvc.ViewModel
         public string Introduction { get; set; }
         [Display(Name = "邮箱")]
         public string Email { get; set; }
-        
+
         private string roleFlag;
         [Display(Name = "角色")]
-        public string RoleFlag {
-            get {
+        public string RoleFlag
+        {
+            get
+            {
                 return roleFlag;
             }
             set { roleFlag = value; }
@@ -48,14 +57,14 @@ namespace WebMvc.ViewModel
             get
             {
                 Keywords keyword =
-                keywordsService.GetModels(m => m.KeyType == "RoleFlag" && m.KeyWord == roleFlag).FirstOrDefault();
+                keywords.FirstOrDefault(m => m.KeyType == "RoleFlag" && m.KeyWord == roleFlag);
                 return keyword?.Content ?? roleFlag;
             }
         }
-        public List<SelectListItem> RoleFlags {
-            get {
-                List<Keywords> keywords =
-                keywordsService.GetModels(m => m.KeyType == "RoleFlag" ).ToList();
+        public List<SelectListItem> RoleFlags
+        {
+            get
+            {
                 List<SelectListItem> list = new List<SelectListItem>();
                 SelectListItem item;
                 foreach (var keyword in keywords)
@@ -73,9 +82,25 @@ namespace WebMvc.ViewModel
         [Display(Name = "电话")]
         public string Tel { get; set; }
 
+        public UserAdminVM GetVM(UserTable user)
+        {
+            UserAdminVM vm;
+            vm = new UserAdminVM();
+            PropertyInfo[] userPis = user.GetType().GetProperties();
+            PropertyInfo[] vmPis = vm.GetType().GetProperties();
+            for (int i = 0; i < userPis.Length; i++)
+            {
+                if (vmPis[i].Name == userPis[i].Name)
+                {
+                    vmPis[i].SetValue(vm, userPis[i].GetValue(user));
+                }
 
-        public List<UserAdminVM> GetVMList(List<UserTable> userList) {
-            
+            }
+            return vm;
+        }
+        public List<UserAdminVM> GetVMList(List<UserTable> userList)
+        {
+
             List<UserAdminVM> vmlist = new List<UserAdminVM>();
             UserAdminVM vm;
             foreach (var user in userList)
@@ -85,21 +110,20 @@ namespace WebMvc.ViewModel
                 PropertyInfo[] vmPis = vm.GetType().GetProperties();
                 for (int i = 0; i < userPis.Length; i++)
                 {
-                    if (vmPis[i].Name==userPis[i].Name)
+                    if (vmPis[i].Name == userPis[i].Name)
                     {
                         vmPis[i].SetValue(vm, userPis[i].GetValue(user));
                     }
-                    
+
                 }
                 vmlist.Add(vm);
             }
             return vmlist;
         }
 
-        public UserTable GetUserTable()
+        public UserTable GetUserTable(UserTable user)
         {
             UserAdminVM vm = this;
-            UserTable user = new UserTable();
             PropertyInfo[] userPis = user.GetType().GetProperties();
             PropertyInfo[] vmPis = vm.GetType().GetProperties();
             for (int i = 0; i < userPis.Length; i++)
