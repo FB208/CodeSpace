@@ -6,10 +6,11 @@
 
 @RenderBody()
 @{
-    if (!string.IsNullOrWhiteSpace(ViewData["AlertMsg"]+""))
+    string alertMsg = TempData["AlertMsg"]+"";
+    string href=TempData["Href"]+"";
+    if (!string.IsNullOrWhiteSpace(alertMsg))
     {
-        string alertMsg = ViewData["AlertMsg"]+"";
-        string href=ViewData["Href"]+"";
+        
         <script>
             alert("@Html.Raw(alertMsg)");
             document.location.href = '@href';

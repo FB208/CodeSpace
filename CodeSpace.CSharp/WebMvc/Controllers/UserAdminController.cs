@@ -38,14 +38,36 @@ namespace WebMvc.Controllers
             bool result = userTableService.Add(user);
             if (result)
             {
-                ViewData["AlertMsg"] = "保存成功";
-                ViewData["Href"] = "/UserAdmin/Index";
+                TempData["AlertMsg"] = "保存成功";
+                TempData["Href"] = "/UserAdmin/Index";
             }
             else
             {
-                ViewData["AlertMsg"] = "保存失败"; 
+                TempData["AlertMsg"] = "保存失败";
             }
             return View(vm);
+        }
+        public IActionResult Delete(string id)
+        {
+            UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
+            if (user != null)
+            {
+                bool result = userTableService.Delete(user);
+                if (result)
+                {
+
+                    TempData["AlertMsg"] = "保存成功";
+                    return Redirect("/UserAdmin/Index");
+                }
+                else
+                {
+                    TempData["AlertMsg"] = "保存成功";
+                    return Redirect("/UserAdmin/Index");
+                }
+                
+            }
+            TempData["AlertMsg"] = "对象已被删除";
+            return Redirect("/UserAdmin/Index");
         }
     }
 }
