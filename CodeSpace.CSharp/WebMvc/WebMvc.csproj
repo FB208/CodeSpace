@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebMvc.BLL\WebMvc.BLLContainer\WebMvc.BLLContainer.csproj" />
-    <ProjectReference Include="..\WebMvc.IBLL\WebMvc.IBLL\WebMvc.IBLL.csproj" />
     <ProjectReference Include="..\WebMvc.Model\WebMvc.Model\WebMvc.Model.csproj" />
   </ItemGroup>
 
