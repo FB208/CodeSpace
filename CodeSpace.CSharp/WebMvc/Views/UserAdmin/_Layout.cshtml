@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewData["Title"] = "_Layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@RenderBody()
+@{
+    if (!string.IsNullOrWhiteSpace(ViewData["AlertMsg"]+""))
+    {
+        string alertMsg = ViewData["AlertMsg"]+"";
+        string href=ViewData["Href"]+"";
+        <script>
+            alert("@Html.Raw(alertMsg)");
+            document.location.href = '@href';
+        </script>
+    }
+
+}
+

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,7 +14,16 @@ namespace WebMvc.ViewModel
     {
         private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         private IKeywordsService keywordsService = BLLContainer.Container.Resolve<IKeywordsService>();
-        public string Uuid { get; set; }
+        private string uuid;
+        public string Uuid {
+            get {
+                return uuid??Guid.NewGuid().ToString();
+            }
+            set
+            {
+                uuid = value;
+            }
+        }
         [Display(Name ="账号")]
         public string UserName { get; set; }
         [Display(Name = "昵称")]
@@ -23,15 +33,40 @@ namespace WebMvc.ViewModel
         public string Introduction { get; set; }
         [Display(Name = "邮箱")]
         public string Email { get; set; }
-        [Display(Name = "角色")]
+        
         private string roleFlag;
+        [Display(Name = "角色")]
         public string RoleFlag {
             get {
-                Keywords keyword=
+                return roleFlag;
+            }
+            set { roleFlag = value; }
+        }
+        [Display(Name = "角色")]
+        public string RoleFlagName
+        {
+            get
+            {
+                Keywords keyword =
                 keywordsService.GetModels(m => m.KeyType == "RoleFlag" && m.KeyWord == roleFlag).FirstOrDefault();
                 return keyword?.Content ?? roleFlag;
             }
-            set { roleFlag = value; }
+        }
+        public List<SelectListItem> RoleFlags {
+            get {
+                List<Keywords> keywords =
+                keywordsService.GetModels(m => m.KeyType == "RoleFlag" ).ToList();
+                List<SelectListItem> list = new List<SelectListItem>();
+                SelectListItem item;
+                foreach (var keyword in keywords)
+                {
+                    item = new SelectListItem();
+                    item.Value = keyword.KeyWord;
+                    item.Text = keyword.Content;
+                    list.Add(item);
+                }
+                return list;
+            }
         }
         [Display(Name = "主页")]
         public string HomePage { get; set; }
@@ -39,8 +74,8 @@ namespace WebMvc.ViewModel
         public string Tel { get; set; }
 
 
-        public List<UserAdminVM> GetList() {
-            List<UserTable> userList = userTableService.GetModels(m => true).ToList();
+        public List<UserAdminVM> GetVMList(List<UserTable> userList) {
+            
             List<UserAdminVM> vmlist = new List<UserAdminVM>();
             UserAdminVM vm;
             foreach (var user in userList)
@@ -59,6 +94,22 @@ namespace WebMvc.ViewModel
                 vmlist.Add(vm);
             }
             return vmlist;
+        }
+
+        public UserTable GetUserTable()
+        {
+            UserAdminVM vm = this;
+            UserTable user = new UserTable();
+            PropertyInfo[] userPis = user.GetType().GetProperties();
+            PropertyInfo[] vmPis = vm.GetType().GetProperties();
+            for (int i = 0; i < userPis.Length; i++)
+            {
+                if (vmPis[i].Name == userPis[i].Name)
+                {
+                    userPis[i].SetValue(user, vmPis[i].GetValue(vm));
+                }
+            }
+            return user;
         }
     }
 }
