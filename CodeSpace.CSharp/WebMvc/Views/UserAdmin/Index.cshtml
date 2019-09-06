@@ -57,9 +57,9 @@
                     @Html.DisplayFor(modelItem => item.Tel)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.Uuid }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.Uuid })
+                    @Html.ActionLink("详情", "Details", new { id = item.Uuid }) |
+                    @Html.ActionLink("修改", "Edit", new { id = item.Uuid }) |
+                    @Html.ActionLink("删除", "Delete", new { id = item.Uuid })
                 </td>
             </tr>
         }

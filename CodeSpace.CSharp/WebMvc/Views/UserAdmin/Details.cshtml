@@ -1,0 +1,67 @@
+﻿@model WebMvc.ViewModel.UserAdminVM
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/UserAdmin/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>UserAdminVM</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NickName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NickName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Pwd)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Pwd)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Introduction)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Introduction)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RoleFlagName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RoleFlagName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HomePage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HomePage)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Tel)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Tel)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -97,5 +97,16 @@ namespace WebMvc.Controllers
             }
             return View(vm);
         }
+
+        public IActionResult Details(string id)
+        {
+            UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
+            UserAdminVM vm = new UserAdminVM();
+            if (user != null)
+            {
+                vm = vm.GetVM(user);
+            }
+            return View(vm);
+        }
     }
 }
