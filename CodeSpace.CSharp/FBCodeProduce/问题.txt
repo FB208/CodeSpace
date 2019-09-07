@@ -1,0 +1,6 @@
+1.生成模型 string类型大写了
+2.生成模型 datetime类型为空没加问号
+3.生成模型 bit 对应int
+4.模型赋值空间 参照ReqManage_AutoSetState_HandleInfo
+5.连接字符串做成可配置的
+5.全库查询加个进度条
