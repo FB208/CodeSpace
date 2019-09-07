@@ -1,3 +1,5 @@
+use BBSAdmin
+
 Create Table UserTable
 (
 	UUID varchar(50) primary key,
