@@ -67,17 +67,40 @@
 </table>
 <nav aria-label="Page navigation">
     <ul class="pagination">
+        @{
+            int total = Convert.ToInt32(ViewData["Total"]);
+            int pageSize = Convert.ToInt32(ViewData["PageSize"]);
+            int pageIndex = Convert.ToInt32(ViewData["PageIndex"]);
+            int pageCount = total / pageSize + ((total % pageSize) > 0 ? 1 : 0);
+        }
+        @{
+            string prevHref = "###";
+            if (pageIndex > 1)
+            {
+                prevHref = "/UserAdmin/Index?pageIndex=" + (pageIndex - 1);
+            }
+
+        }
         <li>
-            <a href="#" aria-label="Previous">
+            <a href="@prevHref" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
-        @for (int i = 0; i < Model.Count(); i++)
+
+        @for (int i = 1; i < pageCount + 1; i++)
         {
-            <li>@Html.ActionLink((i+1).ToString(), "Index", new { pageIndex = i})</li>
+            <li class="@(pageIndex==i?"active":"")">@Html.ActionLink((i).ToString(), "Index", new { pageIndex = i })</li>
         }
         <li>
-            <a href="#" aria-label="Next">
+            @{
+                string nextHref = "###";
+                if (pageIndex < pageCount)
+                {
+                    nextHref = "/UserAdmin/Index?pageIndex=" + (pageIndex + 1);
+                }
+
+            }
+            <a href="@nextHref" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>

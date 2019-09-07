@@ -35,9 +35,9 @@ namespace WebMvc.BLL
         }
 
         public IQueryable<T> GetModelsByPage<type>(int pageSize, int pageIndex, bool isAsc,
-            Expression<Func<T, type>> OrderByLambda, Expression<Func<T, bool>> WhereLambda)
+            Expression<Func<T, type>> OrderByLambda, Expression<Func<T, bool>> WhereLambda,out int total)
         {
-            return Dal.GetModelsByPage(pageSize, pageIndex, isAsc, OrderByLambda, WhereLambda);
+            return Dal.GetModelsByPage(pageSize, pageIndex, isAsc, OrderByLambda, WhereLambda,out total);
         }
     }
 }
