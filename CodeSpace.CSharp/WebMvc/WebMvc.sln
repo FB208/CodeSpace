@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMvc.BLL", "..\WebMvc.BLL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMvc.IBLL", "..\WebMvc.BLL\WebMvc.IBLL\WebMvc.IBLL.csproj", "{938F85A2-6555-4FA5-833A-E89F54070FC4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Standard", "..\Common\Common.Standard\Common.Standard.csproj", "{11C25813-35CE-4F4D-A322-10CC324F491C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{938F85A2-6555-4FA5-833A-E89F54070FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{938F85A2-6555-4FA5-833A-E89F54070FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{938F85A2-6555-4FA5-833A-E89F54070FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11C25813-35CE-4F4D-A322-10CC324F491C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11C25813-35CE-4F4D-A322-10CC324F491C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11C25813-35CE-4F4D-A322-10CC324F491C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11C25813-35CE-4F4D-A322-10CC324F491C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{40181CAC-6364-4F5C-8761-B32F8B122EEE} = {BF00E98E-65B2-4495-98CE-17EDC3514DF0}
 		{7A6BF5D3-71E5-46FF-9566-9E0D3C9895E2} = {1728FA4B-53C4-4F0A-97D5-5BE81AE20FB0}
 		{938F85A2-6555-4FA5-833A-E89F54070FC4} = {1728FA4B-53C4-4F0A-97D5-5BE81AE20FB0}
+		{11C25813-35CE-4F4D-A322-10CC324F491C} = {BF00E98E-65B2-4495-98CE-17EDC3514DF0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2920764D-C4F1-49EA-9AD2-1AE1D1A550EE}

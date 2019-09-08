@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using WebMvc.IBLL.BBSAdmin;
 using WebMvc.Model.BBSAdmin;
+using Common.Standard;
 
 namespace WebMvc.ViewModel
 {
@@ -86,36 +87,17 @@ namespace WebMvc.ViewModel
         {
             UserAdminVM vm;
             vm = new UserAdminVM();
-            PropertyInfo[] userPis = user.GetType().GetProperties();
-            PropertyInfo[] vmPis = vm.GetType().GetProperties();
-            for (int i = 0; i < userPis.Length; i++)
-            {
-                if (vmPis[i].Name == userPis[i].Name)
-                {
-                    vmPis[i].SetValue(vm, userPis[i].GetValue(user));
-                }
-
-            }
+            ReflectionHelper.CopyValue<UserTable, UserAdminVM>(user, vm);
             return vm;
         }
         public List<UserAdminVM> GetVMList(List<UserTable> userList)
         {
-
             List<UserAdminVM> vmlist = new List<UserAdminVM>();
             UserAdminVM vm;
             foreach (var user in userList)
             {
                 vm = new UserAdminVM();
-                PropertyInfo[] userPis = user.GetType().GetProperties();
-                PropertyInfo[] vmPis = vm.GetType().GetProperties();
-                for (int i = 0; i < userPis.Length; i++)
-                {
-                    if (vmPis[i].Name == userPis[i].Name)
-                    {
-                        vmPis[i].SetValue(vm, userPis[i].GetValue(user));
-                    }
-
-                }
+                ReflectionHelper.CopyValue(user, vm);
                 vmlist.Add(vm);
             }
             return vmlist;
@@ -124,15 +106,7 @@ namespace WebMvc.ViewModel
         public UserTable GetUserTable(UserTable user)
         {
             UserAdminVM vm = this;
-            PropertyInfo[] userPis = user.GetType().GetProperties();
-            PropertyInfo[] vmPis = vm.GetType().GetProperties();
-            for (int i = 0; i < userPis.Length; i++)
-            {
-                if (vmPis[i].Name == userPis[i].Name)
-                {
-                    userPis[i].SetValue(user, vmPis[i].GetValue(vm));
-                }
-            }
+            ReflectionHelper.CopyValue(vm, user);
             return user;
         }
     }
