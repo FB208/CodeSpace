@@ -7,10 +7,10 @@
 
 
 <h1>Index</h1>
-
+@Common.Standard.Test.TestString()
 <div class="btn-toolbar" role="toolbar">
     <div class="btn-group">
-        <a  class="btn btn-default" asp-action="Create">创建</a>
+        <a class="btn btn-default" asp-action="Create">创建</a>
         <button type="button" class="btn btn-default">按钮 2</button>
         <button type="button" class="btn btn-default">按钮 3</button>
     </div>
@@ -65,21 +65,4 @@
         }
     </tbody>
 </table>
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        <li>
-            <a href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        @for (int i = 0; i < Model.Count(); i++)
-        {
-            <li>@Html.ActionLink((i+1).ToString(), "Index", new { pageIndex = i})</li>
-        }
-        <li>
-            <a href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav>
+@await Component.InvokeAsync("Page", new { Href="/UserAdmin/Index" })

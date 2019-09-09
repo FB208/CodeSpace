@@ -1,4 +1,4 @@
-
+use BBSAdmin
 
 Create Table Keywords
 (

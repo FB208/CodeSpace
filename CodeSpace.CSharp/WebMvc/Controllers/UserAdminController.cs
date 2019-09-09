@@ -19,10 +19,15 @@ namespace WebMvc.Controllers
         //    _userTableService = Context;
         //}
         private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
-        public IActionResult Index(int pageSize=10,int pageIndex=1)
+        public IActionResult Index(int pageSize=5,int pageIndex=1)
         {
-            List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true).ToList();
+
+            int total = 0 ;
+            List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true,out total).ToList();
             List<UserAdminVM> list = new UserAdminVM().GetVMList(userList);
+            ViewData["PageIndex"] = pageIndex;
+            ViewData["PageSize"] = pageSize;
+            ViewData["Total"] = total;
             return View(list);
         }
 
