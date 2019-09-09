@@ -26,7 +26,16 @@ namespace FBCodeProduce
         /// <param name="e"></param>
         private void CreateModelForm_Load(object sender, EventArgs e)
         {
-            ConnectDataBaseAndBind();
+            try
+            {
+                ConnectDataBaseAndBind();
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("默认数据库连接失败，请手动指定");
+            }
+            
         }
 
         /// <summary>

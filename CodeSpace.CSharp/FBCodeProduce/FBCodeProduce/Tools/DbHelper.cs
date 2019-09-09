@@ -10,6 +10,9 @@ using System.Configuration;
 using System.Data.Common;
 using System.Collections;
 using FBCodeProduce.Tools;
+using Newtonsoft.Json.Linq;
+using FBCodeProduce;
+using Common.Standard;
 
 namespace DBUtility
 {
@@ -19,12 +22,13 @@ namespace DBUtility
     /// </summary>
     public abstract class DbHelper
     {
+        static JToken json = NewtonjsonHelper.ReadFile(Global.USER_SETTING_JSON_PATH);
         //数据库连接字符串(web.config来配置)，多数据库可使用DbHelperQLP来实现.
         //public static string connectionString = PubConstant.ConnectionString;
-        public static string connectionString = IniHelper.GetValue("链接字符串", "ConnectionString");
-            //"server=.;uid=sa;pwd=Yang123!@#;database=NewReport;Pooling=true;";
-            //"server=10.16.28.82;uid=sa;pwd=cbhb1234;database=NewReport;Pooling=true;";//
-            //"server=Server-PC;uid=sa;pwd=Server123!@#;database=NewReport;Pooling=true;";//System.Configuration.ConfigurationManager.ConnectionStrings["dbconnction"].ConnectionString;
+        public static string connectionString = json["DbServer"].Children().FirstOrDefault(m => m.Value<bool>("IsUse") == true).Value<string>("ConnectionString");
+        //"server=.;uid=sa;pwd=Yang123!@#;database=NewReport;Pooling=true;";
+        //"server=10.16.28.82;uid=sa;pwd=cbhb1234;database=NewReport;Pooling=true;";//
+        //"server=Server-PC;uid=sa;pwd=Server123!@#;database=NewReport;Pooling=true;";//System.Configuration.ConfigurationManager.ConnectionStrings["dbconnction"].ConnectionString;
         public DbHelper()
         {
         }
