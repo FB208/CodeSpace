@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,31 @@ namespace Common.Standard
                 JObject jobj = JObject.Load(reader);
                 return jobj;
             }
+        }
+        /// <summary>
+        /// JObject 写入json文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static bool WriteFile(string path,JObject json)
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(path))
+                {
+                    using (JsonWriter write = new JsonTextWriter(sw))
+                    {
+                        json.WriteTo(write);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
     }
 }

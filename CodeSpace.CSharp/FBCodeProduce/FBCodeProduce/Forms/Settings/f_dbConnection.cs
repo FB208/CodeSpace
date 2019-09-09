@@ -44,11 +44,47 @@ namespace FBCodeProduce.Forms.Settings
             tb_ServerType.Text = selectedItem.Value<string>("ServerType");
             tb_ConnectionString.Text = selectedItem.Value<string>("ConnectionString"); 
         }
-
+        /// <summary>
+        /// 保存修改
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected override void btn_Save_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("子窗口");
-            base.btn_Save_Click(sender,e);
+            string serverName = cb_ServerName.Text;
+            string serverType = tb_ServerType.Text;
+            string connectionString = tb_ConnectionString.Text;
+            JToken json = NewtonjsonHelper.ReadFile(Global.USER_SETTING_JSON_PATH);
+            bool isEdit = json["DbServer"].Children().Any(m => m.Value<string>("ServerName") == serverName);
+            #region 设置所有链接选中状态为false
+            var servers = json["DbServer"];
+            for (int i = 0; i < servers.Count(); i++)
+            {
+                servers[i]["IsUse"] = false;
+            }
+            #endregion
+
+            if (isEdit)
+            {
+                JToken edit = json["DbServer"].FirstOrDefault(m => m.Value<string>("ServerName") == serverName);
+                edit["ServerName"] = serverName;
+                edit["ServerType"] = serverType;
+                edit["ConnectionString"] = connectionString;
+                edit["IsUse"] = true;
+            }
+            else
+            {
+                JObject newServer = new JObject();
+                newServer.Add(new JProperty("ServerName", serverName));
+                newServer.Add(new JProperty("ServerType", serverType));
+                newServer.Add(new JProperty("ConnectionString", connectionString));
+                newServer.Add(new JProperty("IsUse", true));
+                json["DbServer"].Last.AddAfterSelf(newServer);
+            }
+            NewtonjsonHelper.WriteFile(Global.USER_SETTING_JSON_PATH, json as JObject);
+            MessageBox.Show("保存成功");
+            BindServerName(json);
+            //base.btn_Save_Click(sender,e);
         }
 
         private void Cb_ServerName_SelectedIndexChanged(object sender, EventArgs e)
