@@ -95,8 +95,7 @@ namespace FBCodeProduce.Properties {
         ///tinyint=System.Byte 
         ///uniqueidentifier=System.Guid 
         ///varbinary=System.Byte[] 
-        ///varchar=String
-        /// [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        ///varchar=String        /// [字符串的其余部分被截断]&quot;; 的本地化字符串。
         /// </summary>
         internal static string Config {
             get {

@@ -1,0 +1,16 @@
+{
+  "DbServer": [
+    {
+      "ServerName": "FbInCbhb",
+      "ServerType": "Microsoft SQL Server",
+      "ConnectionString": "Data Source=.;Initial Catalog=NewReport;Integrated Security=True;",
+      "IsUse": true
+    },
+    {
+      "ServerName": "82",
+      "ServerType": "Microsoft SQL Server",
+      "ConnectionString": "server=10.16.28.82;uid=sa;pwd=cbhb1234;database=NewReport;Pooling=true;",
+      "IsUse": false
+    }
+  ]
+}

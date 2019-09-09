@@ -20,27 +20,29 @@ namespace FBCodeProduce
 
         private void tw_menu_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            string name = e.Node.Text.ToString();
-            ShowPanel("panel_"+name);
+            string name = e.Node.Name.ToString();
+            ShowPanel(name);
        
 
         }
 
-        private void ShowPanel(string panelName)
+        private void ShowPanel(string linkName)
         {
-            panel_father.Controls.Clear();
             this.Cursor = Cursors.WaitCursor;
-
-            //string name=strName; //类的名字
-            Form fm = (Form) Assembly.Load("FBCodeProduce.exe").CreateInstance("f_dbConnection");
-            fm.MdiParent=this.ParentForm;
-            fm.Show();
-            fm.Dock=DockStyle.Fill;
+            string name= $"FBCodeProduce.Forms.Settings.f_{linkName}"; //类的名字
+            var path = AssemblyName.GetAssemblyName("FBCodeProduce.exe");
+            Form fm = (Form)Assembly.Load(path).CreateInstance(name);
+            if (fm!=null)
+            {
+                panel_father.Controls.Clear();
+                
+                fm.MdiParent = this.ParentForm;
+                fm.Dock = DockStyle.Fill;
+                fm.TopLevel = false;
+                panel_father.Controls.Add(fm);
+                fm.Show();
+            }
             this.Cursor = Cursors.Default;
-            f_dbConnection child = new f_dbConnection();
-            child.TopLevel = false;
-            panel_father.Controls.Add(child);
-            child.Show();
         }
 
 
