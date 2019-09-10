@@ -12,5 +12,13 @@ namespace FBCodeProduce.Models
         /// 是否模糊查询 true=模糊查询 like=全字匹配
         /// </summary>
         public bool IsLike { get; set; }
+        /// <summary>
+        /// 查询条件
+        /// </summary>
+        public string SearchValue { get; set; }
+        /// <summary>
+        /// 替换内容
+        /// </summary>
+        public string NewValue { get; set; }
     }
 }

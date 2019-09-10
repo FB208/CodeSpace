@@ -10,7 +10,7 @@
       "ServerName": "FbInCbhb",
       "ServerType": "Microsoft SQL Server",
       "ConnectionString": "Data Source=.;Initial Catalog=NewReport;Integrated Security=True;",
-      "IsUse": true
+      "IsUse": false
     },
     {
       "ServerName": "82",
