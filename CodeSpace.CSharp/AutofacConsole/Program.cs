@@ -9,19 +9,44 @@ namespace AutofacConsole
         static void Main(string[] args)
         {
             //非依赖注入的写法
-            new TodayWriter(new ConsoleOutput()).WriteDate();
-            Console.ReadKey();
+            //new TodayWriter(new ConsoleOutput()).WriteDate();
+            //Console.ReadKey();
+
             //依赖注入容器
             var builder = new ContainerBuilder();
-            builder.RegisterType<ConsoleOutput>().As<IOutput>();
-            builder.RegisterType<TodayWriter>().As<IDateWriter>();
-            builder.RegisterType<TodayWriter2>().As<IDateWriter>();
+
+            //通过类型注册
+            //builder.RegisterType<ConsoleOutput>().As<IOutput>();
+            //builder.RegisterType<TodayWriter>().As<IDateWriter>();
+            //通过构造函数注册
+            //builder.RegisterType<ConfigReader>().UsingConstructor(typeof(string)).WithParameter("configSectionName", "sectionName");
+            //builder.RegisterType<TodayWriter>().UsingConstructor(typeof(IOutput)).WithParameter("output", new ConsoleOutput());
+            //实例组件
+            //builder.RegisterInstance(new ConfigReader("testConfig")).As<IConfigReader>().ExternallyOwned();
+            //Lambda表达式组件
+            builder.Register(m => new ConsoleOutput());
+            builder.Register(m => new TodayWriter(m.Resolve<ConsoleOutput>()));
+
             Container = builder.Build();
+            using (var scope = Container.BeginLifetimeScope())
+            {
+                //通过类型注册
+                //var writer = scope.Resolve<IDateWriter>();
+                //writer.WriteDate();
+                //通过构造函数注册
+                //scope.Resolve<ConfigReader>().Write();
+                //scope.Resolve<TodayWriter>().WriteDate();
+                //实例组件
+                //scope.Resolve<IConfigReader>().Write();
+                //Lambda表达式组件
+                scope.Resolve<TodayWriter>().WriteDate();
+
+            }
 
             // The WriteDate method is where we'll make use
             // of our dependency injection. We'll define that
             // in a bit.
-            WriteDate();
+            //WriteDate();
         }
         public static void WriteDate()
         {
@@ -84,18 +109,21 @@ namespace AutofacConsole
             this._output.Write(DateTime.Today.ToShortDateString());
         }
     }
-    public class TodayWriter2 : IDateWriter
-    {
-        private IOutput _output;
-        public TodayWriter2(IOutput output)
-        {
-            this._output = output;
-        }
-
-        public void WriteDate()
-        {
-            this._output.Write("this is other one");
-        }
+   
+    public interface IConfigReader {
+        void Write();
     }
-
+    public class ConfigReader : IConfigReader
+    {
+        public string _configSectionName;
+        public ConfigReader(string configSectionName)
+        {
+            _configSectionName = configSectionName;
+            // Store config section name
+        }
+        public void Write() {
+            Console.WriteLine(_configSectionName);
+        }
+        // ...read configuration based on the section name.
+    }
 }

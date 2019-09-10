@@ -44,7 +44,8 @@ namespace FBCodeProduce
                         {
 
                             string colName = dt_cols.Rows[j]["Column_name"] + "";
-                            DataTable dt_SearchResults = DbHelper.Query(" SELECT * FROM [" + tableName + "] WHERE [" + colName + "] LIKE '%" + text + "%' ").Tables[0];
+                            //DataTable dt_SearchResults = DbHelper.Query(" SELECT * FROM [" + tableName + "] WHERE [" + colName + "] LIKE '%" + text + "%' ").Tables[0];
+                            DataTable dt_SearchResults = DbHelper.Query(" SELECT * FROM [" + tableName + "] WHERE [" + colName + "] = '" + text + "' ").Tables[0];
                             if (dt_SearchResults != null && dt_SearchResults.Rows.Count > 0)
                             {
                                 result += "【" + tableName + "|" + colName + "】" + " \r\n";
