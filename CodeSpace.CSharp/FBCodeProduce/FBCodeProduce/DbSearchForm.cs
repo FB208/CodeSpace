@@ -12,8 +12,10 @@ namespace FBCodeProduce
 {
     public partial class DbSearchForm : Form
     {
+        Models.DbSearchModel sModel;
         public DbSearchForm()
         {
+            sModel = new Models.DbSearchModel();
             InitializeComponent();
         }
 
@@ -26,13 +28,12 @@ namespace FBCodeProduce
         {
             try
             {
-
-
                 string text = tb_SearchTxt.Text;//=oldValue
                 string newValue = tb_NewValue.Text;
                 string result = "";
                 string selectStr = "";
                 string updateStr = "";
+                sModel.IsLike = cb_IsLike.Checked;
                 DataTable dt_Tables = DbHelper.Query(" SELECT Name FROM SysObjects Where XType='U' ORDER BY Name").Tables[0];
                 for (int i = 0; i < dt_Tables.Rows.Count; i++)
                 {
@@ -44,14 +45,16 @@ namespace FBCodeProduce
                         {
 
                             string colName = dt_cols.Rows[j]["Column_name"] + "";
-                            //DataTable dt_SearchResults = DbHelper.Query(" SELECT * FROM [" + tableName + "] WHERE [" + colName + "] LIKE '%" + text + "%' ").Tables[0];
-                            DataTable dt_SearchResults = DbHelper.Query(" SELECT * FROM [" + tableName + "] WHERE [" + colName + "] = '" + text + "' ").Tables[0];
+                            string searchSql = GetSearchSelectSqlString(tableName, colName, text);
+
+
+
+                            DataTable dt_SearchResults = DbHelper.Query(searchSql).Tables[0];
                             if (dt_SearchResults != null && dt_SearchResults.Rows.Count > 0)
                             {
                                 result += "【" + tableName + "|" + colName + "】" + " \r\n";
-                                selectStr += string.Format(" SELECT {0},* FROM {1} WHERE {2} like '%{3}%' ", colName, tableName, colName, text) + " \r\n";
-                                updateStr += string.Format(" UPDATE {0} SET {1}='{2}' WHERE {3} like '%{4}%' ",
-                                    tableName, colName, newValue,colName,text) + " \r\n";
+                                selectStr += PushSelectSqlString(tableName, colName, text);
+                                updateStr += PushUpdateSqlString(tableName, colName, text, newValue);
                             }
                         }
                     }
@@ -67,20 +70,66 @@ namespace FBCodeProduce
                 throw;
             }
         }
-
         private void btn_select_Click(object sender, EventArgs e)
         {
-            tb_SearchResult.Text = AppDomain.CurrentDomain.GetData("DbSearchForm_Select").ToString();
+            
+            tb_SearchResult.Text = AppDomain.CurrentDomain.GetData("DbSearchForm_Select")?.ToString();
         }
 
         private void btn_update_Click(object sender, EventArgs e)
         {
-            tb_SearchResult.Text = AppDomain.CurrentDomain.GetData("DbSearchForm_Update").ToString();
+            tb_SearchResult.Text = AppDomain.CurrentDomain.GetData("DbSearchForm_Update")?.ToString();
         }
 
         private void btn_Result_Click(object sender, EventArgs e)
         {
-            tb_SearchResult.Text = AppDomain.CurrentDomain.GetData("DbSearchForm_Result").ToString();
+            tb_SearchResult.Text = AppDomain.CurrentDomain.GetData("DbSearchForm_Result")?.ToString();
         }
+
+
+        #region 私有方法
+        private string GetSearchSelectSqlString(string tableName, string colName, string searchValue)
+        {
+            string returnStr = "";
+            if (sModel.IsLike)
+            {
+                returnStr = $" SELECT * FROM [{tableName}] WHERE [{colName}] LIKE '%{searchValue}%' ";
+            }
+            else
+            {
+                returnStr = $" SELECT * FROM [{tableName}] WHERE [{colName}] = '{searchValue}' ";
+            }
+            return returnStr;
+        }
+        private string PushUpdateSqlString(string tableName, string colName, string searchValue, string newValue)
+        {
+            string returnStr = "";
+            if (sModel.IsLike)
+            {
+                returnStr = $"UPDATE {tableName} SET {colName}='{newValue}' WHERE {colName} like '%{searchValue}%'  \r\n";
+            }
+            else
+            {
+                returnStr = $"UPDATE {tableName} SET {colName}='{newValue}' WHERE {colName} = '{searchValue}'  \r\n";
+            }
+            return returnStr;
+        }
+        private string PushSelectSqlString(string tableName, string colName, string searchValue)
+        {
+            string returnStr = "";
+            if (sModel.IsLike)
+            {
+                returnStr = $" SELECT {colName},* FROM {tableName} WHERE {colName} like '%{searchValue}%' \r\n";
+            }
+            else
+            {
+                returnStr = $" SELECT {colName},* FROM {tableName} WHERE {colName} = '{searchValue}' \r\n";
+            }
+            return returnStr;
+        }
+        #endregion
+
+
+
     }
 }

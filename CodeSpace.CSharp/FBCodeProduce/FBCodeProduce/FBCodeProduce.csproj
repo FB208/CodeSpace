@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="Models\DataDictionary.cs" />
+    <Compile Include="Models\DbSearchModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingForm.cs">
