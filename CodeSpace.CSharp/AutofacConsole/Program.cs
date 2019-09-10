@@ -24,8 +24,9 @@ namespace AutofacConsole
             //实例组件
             //builder.RegisterInstance(new ConfigReader("testConfig")).As<IConfigReader>().ExternallyOwned();
             //Lambda表达式组件
-            builder.Register(m => new ConsoleOutput());
-            builder.Register(m => new TodayWriter(m.Resolve<ConsoleOutput>()));
+            //builder.Register(m => new ConsoleOutput());
+            //builder.Register(m => new TodayWriter(m.Resolve<ConsoleOutput>()));
+            //属性注入-
 
             Container = builder.Build();
             using (var scope = Container.BeginLifetimeScope())
