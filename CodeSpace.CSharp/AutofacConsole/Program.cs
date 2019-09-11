@@ -26,7 +26,27 @@ namespace AutofacConsole
             //Lambda表达式组件
             //builder.Register(m => new ConsoleOutput());
             //builder.Register(m => new TodayWriter(m.Resolve<ConsoleOutput>()));
-            //属性注入-
+            //属性注入-反射方法
+            //builder.RegisterType<HelloUser>().PropertiesAutowired();
+            //属性注入-Lambda
+            //builder.Register(m => new ConfigReader("sectionName") { _attributeInjection = "AttributeName" });
+            //方法注入-Lambda
+            //builder.RegisterType<Method>();
+            //builder.Register(c =>
+            //    {
+            //        var result = new HelloUser();
+            //        result.SayHello(c.Resolve<Method>());
+            //        return result;
+            //    });
+            //方法注入-激活时间处理程序
+            builder.RegisterType<Method>();
+            builder.RegisterType<HelloUser>().OnActivating(e =>
+            {
+                var m = e.Context.Resolve<Method>();
+                e.Instance.SayHello(m);
+            });
+
+
 
             Container = builder.Build();
             using (var scope = Container.BeginLifetimeScope())
@@ -40,39 +60,24 @@ namespace AutofacConsole
                 //实例组件
                 //scope.Resolve<IConfigReader>().Write();
                 //Lambda表达式组件
-                scope.Resolve<TodayWriter>().WriteDate();
-
-            }
-
-            // The WriteDate method is where we'll make use
-            // of our dependency injection. We'll define that
-            // in a bit.
-            //WriteDate();
-        }
-        public static void WriteDate()
-        {
-            // Create the scope, resolve your IDateWriter,
-            // use it, then dispose of the scope.
-            using (var scope = Container.BeginLifetimeScope())
-            {
-                var writer = scope.Resolve<IDateWriter>();
-                writer.WriteDate();
+                //scope.Resolve<TodayWriter>().WriteDate();
+                //属性注入-反射方法
+                //scope.Resolve<HelloUser>().SayHello();
+                //属性注入-Lambda
+                //scope.Resolve<ConfigReader>().Write();
+                //方法注入-Lambda
+                //scope.Resolve<HelloUser>();
+                //方法注入-激活时间处理程序
+                scope.Resolve<HelloUser>();
             }
         }
+
     }
-    // This interface helps decouple the concept of
-    // "writing output" from the Console class. We
-    // don't really "care" how the Write operation
-    // happens, just that we can write.
+
     public interface IOutput
     {
         void Write(string content);
     }
-
-    // This implementation of the IOutput interface
-    // is actually how we write to the Console. Technically
-    // we could also implement IOutput to write to Debug
-    // or Trace... or anywhere else.
     public class ConsoleOutput : IOutput
     {
         public void Write(string content)
@@ -80,23 +85,10 @@ namespace AutofacConsole
             Console.WriteLine(content);
         }
     }
-
-    // This interface decouples the notion of writing
-    // a date from the actual mechanism that performs
-    // the writing. Like with IOutput, the process
-    // is abstracted behind an interface.
     public interface IDateWriter
     {
         void WriteDate();
     }
-
-    // This TodayWriter is where it all comes together.
-    // Notice it takes a constructor parameter of type
-    // IOutput - that lets the writer write to anywhere
-    // based on the implementation. Further, it implements
-    // WriteDate such that today's date is written out;
-    // you could have one that writes in a different format
-    // or a different date.
     public class TodayWriter : IDateWriter
     {
         private IOutput _output;
@@ -110,21 +102,52 @@ namespace AutofacConsole
             this._output.Write(DateTime.Today.ToShortDateString());
         }
     }
-   
-    public interface IConfigReader {
+
+    public interface IConfigReader
+    {
         void Write();
     }
     public class ConfigReader : IConfigReader
     {
+
         public string _configSectionName;
+        public string _attributeInjection { get; set; }
+
         public ConfigReader(string configSectionName)
         {
             _configSectionName = configSectionName;
-            // Store config section name
         }
-        public void Write() {
-            Console.WriteLine(_configSectionName);
+        public void Write()
+        {
+            if (!string.IsNullOrWhiteSpace(_attributeInjection))
+            {
+                Console.WriteLine(_attributeInjection + "  " + _configSectionName);
+            }
+            else
+            {
+                Console.WriteLine(_configSectionName);
+            }
+
         }
-        // ...read configuration based on the section name.
+
+        
+    }
+    public class HelloUser
+    {
+        public string UserName { get; set; }
+        public HelloUser()
+        { }
+        public void SayHello(Method m)
+        {
+            Console.WriteLine($"Hello {UserName}");
+            m.Write();
+        }
+    }
+    public class Method
+    {
+        public void Write()
+        {
+            Console.WriteLine("this is a method");
+        }
     }
 }
