@@ -7,7 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 namespace WebMvc
 {
     public class Program
@@ -19,6 +20,7 @@ namespace WebMvc
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                //.ConfigureServices(services=>services.AddAutofac())
                 .UseStartup<Startup>();
     }
 }

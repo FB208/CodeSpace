@@ -13,12 +13,20 @@ namespace WebMvc.ViewModel
 {
     public class UserAdminVM
     {
-        private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
-        private IKeywordsService keywordsService = BLLContainer.Container.Resolve<IKeywordsService>();
-        List<Keywords> keywords;
-        public UserAdminVM(){
+        //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
+        //private IKeywordsService keywordsService = BLLContainer.Container.Resolve<IKeywordsService>();
+        private IUserTableService userTableService;
+        private IKeywordsService keywordsService;
+        public UserAdminVM(IUserTableService iUserTableService, IKeywordsService iKeywordsService)
+        {
+            userTableService = iUserTableService;
+            keywordsService = iKeywordsService;
             keywords = keywordsService.GetModels(m => m.KeyType == "RoleFlag").ToList();
         }
+        List<Keywords> keywords;
+        //public UserAdminVM(){
+        //    keywords = keywordsService.GetModels(m => m.KeyType == "RoleFlag").ToList();
+        //}
         
         private string uuid;
         public string Uuid
@@ -86,7 +94,7 @@ namespace WebMvc.ViewModel
         public UserAdminVM GetVM(UserTable user)
         {
             UserAdminVM vm;
-            vm = new UserAdminVM();
+            vm = new UserAdminVM(userTableService, keywordsService);
             ReflectionHelper.CopyValue<UserTable, UserAdminVM>(user, vm);
             return vm;
         }
@@ -96,7 +104,7 @@ namespace WebMvc.ViewModel
             UserAdminVM vm;
             foreach (var user in userList)
             {
-                vm = new UserAdminVM();
+                vm = new UserAdminVM(userTableService, keywordsService);
                 ReflectionHelper.CopyValue(user, vm);
                 vmlist.Add(vm);
             }

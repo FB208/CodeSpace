@@ -8,5 +8,6 @@ namespace WebMvc.IBLL.BBSAdmin
 {
     public interface IUserTableService:IBaseService<UserTable>
     {
+
     }
 }

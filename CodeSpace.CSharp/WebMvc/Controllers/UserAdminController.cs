@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebMvc.IBLL.BBSAdmin;
-using WebMvc.BLLContainer;
+//using WebMvc.BLLContainer;
 using WebMvc.Model.BBSAdmin;
 using WebMvc.ViewModel;
 
@@ -13,18 +13,20 @@ namespace WebMvc.Controllers
     public class UserAdminController : BaseController
     {
 
-        //private readonly IUserTableService _userTableService;
-        //public UserAdminController(IUserTableService Context)
-        //{
-        //    _userTableService = Context;
-        //}
-        private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
+        private readonly IUserTableService userTableService;
+        private readonly IKeywordsService keywordsService;
+        public UserAdminController(IUserTableService iUserTableService, IKeywordsService iKeywordsService)
+        {
+            userTableService = iUserTableService;
+            keywordsService = iKeywordsService;
+        }
+        //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         public IActionResult Index(int pageSize=5,int pageIndex=1)
         {
 
             int total = 0 ;
             List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true,out total).ToList();
-            List<UserAdminVM> list = new UserAdminVM().GetVMList(userList);
+            List<UserAdminVM> list = new UserAdminVM(userTableService, keywordsService).GetVMList(userList);
             ViewData["PageIndex"] = pageIndex;
             ViewData["PageSize"] = pageSize;
             ViewData["Total"] = total;
@@ -33,7 +35,7 @@ namespace WebMvc.Controllers
 
         public IActionResult Create()
         {
-            UserAdminVM vm = new UserAdminVM();
+            UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
             return View(vm);
         }
         [HttpPost]
@@ -78,7 +80,7 @@ namespace WebMvc.Controllers
         public IActionResult Edit(string id)
         {
             UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
-            UserAdminVM vm = new UserAdminVM();
+            UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
             if (user!=null)
             {
                 vm= vm.GetVM(user);
@@ -106,7 +108,7 @@ namespace WebMvc.Controllers
         public IActionResult Details(string id)
         {
             UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
-            UserAdminVM vm = new UserAdminVM();
+            UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
             if (user != null)
             {
                 vm = vm.GetVM(user);

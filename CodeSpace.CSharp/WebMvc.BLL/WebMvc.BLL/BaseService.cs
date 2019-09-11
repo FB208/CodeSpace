@@ -10,7 +10,7 @@ namespace WebMvc.BLL
     public abstract class BaseService<T> where T:class,new()
     {
         public BaseService() {
-            SetDal();
+            //SetDal();
         }
         public IBaseDAL<T> Dal { get; set; }
         public abstract void SetDal();

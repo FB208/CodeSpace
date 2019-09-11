@@ -10,20 +10,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using WebMvc.IBLL.BBSAdmin;
+using WebMvc.BLL.BBSAdmin;
+using WebMvc.DAL.BBSAdmin;
+using WebMvc.IDAL.BBSAdmin;
 
 namespace WebMvc
 {
     public class Startup
     {
+        //public IConfiguration Configuration { get; }
+        public IContainer ApplicationContainer { get; private set; }
+
+        public IConfiguration Configuration { get; private set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        
 
         
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -34,11 +44,34 @@ namespace WebMvc
             //用于直接读取数据库，不走框架(该注入仅用于测试)
             services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BBSAdminConnection")));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
-            
-        }
+            services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+
+            // Create the container builder.
+            var builder = new ContainerBuilder();
+
+            // Register dependencies, populate the services from
+            // the collection, and build the container.
+            //
+            // Note that Populate is basically a foreach to add things
+            // into Autofac that are in the collection. If you register
+            // things in Autofac BEFORE Populate then the stuff in the
+            // ServiceCollection can override those things; if you register
+            // AFTER Populate those registrations can override things
+            // in the ServiceCollection. Mix and match as needed.
+            builder.Populate(services);
+            //builder.RegisterType<MyType>().As<IMyType>();
+            builder.RegisterType<UserTableDAL>().As<IUserTableDAL>();
+            builder.RegisterType<UserTableService>().As<IUserTableService>();
+            builder.RegisterType<KeywordsDAL>().As<IKeywordsDAL>();
+            builder.RegisterType<KeywordsService>().As<IKeywordsService>();
+            this.ApplicationContainer = builder.Build();
+
+            // Create the IServiceProvider based on the container.
+            return new AutofacServiceProvider(this.ApplicationContainer);
+
+        }
+       
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
