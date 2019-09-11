@@ -16,6 +16,7 @@ using WebMvc.IBLL.BBSAdmin;
 using WebMvc.BLL.BBSAdmin;
 using WebMvc.DAL.BBSAdmin;
 using WebMvc.IDAL.BBSAdmin;
+using WebMvc.ViewModel;
 
 namespace WebMvc
 {
@@ -65,6 +66,7 @@ namespace WebMvc
             builder.RegisterType<UserTableService>().As<IUserTableService>();
             builder.RegisterType<KeywordsDAL>().As<IKeywordsDAL>();
             builder.RegisterType<KeywordsService>().As<IKeywordsService>();
+            builder.RegisterType<UserAdminVM>();
             this.ApplicationContainer = builder.Build();
 
             // Create the IServiceProvider based on the container.

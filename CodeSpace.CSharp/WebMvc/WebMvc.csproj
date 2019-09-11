@@ -19,8 +19,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.Standard\Common.Standard.csproj" />
-    <ProjectReference Include="..\WebMvc.BLL\WebMvc.BLLContainer\WebMvc.BLLContainer.csproj" />
+    <ProjectReference Include="..\WebMvc.BLL\WebMvc.BLL\WebMvc.BLL.csproj" />
     <ProjectReference Include="..\WebMvc.BLL\WebMvc.IBLL\WebMvc.IBLL.csproj" />
+    <ProjectReference Include="..\WebMvc.DAL\WebMvc.DAL\WebMvc.DAL.csproj" />
     <ProjectReference Include="..\WebMvc.Model\WebMvc.Model\WebMvc.Model.csproj" />
   </ItemGroup>
 
