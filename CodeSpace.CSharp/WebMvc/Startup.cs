@@ -33,10 +33,6 @@ namespace WebMvc
         {
             Configuration = configuration;
         }
-
-        
-
-        
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -101,9 +97,9 @@ namespace WebMvc
             //Mappings.RegisterMappings();
             app.UseStateAutoMapper();
             app.UseAutoInject(Assembly.Load("WebMvc"));
-            
-            //var expression = app.UseAutoMapper();
-            //expression.CreateMap<User, UserDto>();
+
+            var expression = app.UseAutoMapper();
+            expression.CreateMap<User, UserDto>().ForAllMembers(opt => opt.Ignore());
 
             app.UseMvc(routes =>
             {

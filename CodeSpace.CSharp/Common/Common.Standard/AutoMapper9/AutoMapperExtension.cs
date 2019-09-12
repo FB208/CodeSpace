@@ -18,12 +18,6 @@ namespace Common.Standard.AutoMapper9
             service.TryAddSingleton(serviceProvider =>
             {
                 var mapperConfigurationExpression = serviceProvider.GetRequiredService<MapperConfigurationExpression>();
-                var factory = serviceProvider.GetRequiredService<AutoInjectFactory>();
-                foreach (var (sourceType, targetType) in factory.ConvertList)
-                {
-                    mapperConfigurationExpression.CreateMap(sourceType, targetType);
-                }
-
                 var instance = new MapperConfiguration(mapperConfigurationExpression);
 
                 instance.AssertConfigurationIsValid();

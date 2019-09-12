@@ -8,25 +8,18 @@ using System.Threading.Tasks;
 using WebMvc.IBLL.BBSAdmin;
 using WebMvc.Model.BBSAdmin;
 using Common.Standard;
+using Common.Standard.AutoMapper9;
 
 namespace WebMvc.ViewModel
 {
+
     public class UserAdminVM
     {
-        //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
-        //private IKeywordsService keywordsService = BLLContainer.Container.Resolve<IKeywordsService>();
-        private IUserTableService userTableService;
-        private IKeywordsService keywordsService;
-        public UserAdminVM(IUserTableService iUserTableService, IKeywordsService iKeywordsService)
-        {
-            userTableService = iUserTableService;
-            keywordsService = iKeywordsService;
-            keywords = keywordsService.GetModels(m => m.KeyType == "RoleFlag").ToList();
-        }
+
+        public UserAdminVM() { }
+
         List<Keywords> keywords;
-        //public UserAdminVM(){
-        //    keywords = keywordsService.GetModels(m => m.KeyType == "RoleFlag").ToList();
-        //}
+
         
         private string uuid;
         public string Uuid
@@ -91,30 +84,6 @@ namespace WebMvc.ViewModel
         [Display(Name = "电话")]
         public string Tel { get; set; }
 
-        public UserAdminVM GetVM(UserTable user)
-        {
-            
-            ReflectionHelper.CopyValue<UserTable, UserAdminVM>(user, this);
-            return this;
-        }
-        public List<UserAdminVM> GetVMList(List<UserTable> userList)
-        {
-            List<UserAdminVM> vmlist = new List<UserAdminVM>();
-            UserAdminVM vm;
-            foreach (var user in userList)
-            {
-                vm = new UserAdminVM(userTableService, keywordsService);
-                ReflectionHelper.CopyValue(user, vm);
-                vmlist.Add(vm);
-            }
-            return vmlist;
-        }
-
-        public UserTable GetUserTable(UserTable user)
-        {
-            UserAdminVM vm = this;
-            ReflectionHelper.CopyValue(vm, user);
-            return user;
-        }
+        
     }
 }

@@ -20,5 +20,31 @@ namespace WebMvc.BLL.BBSAdmin
             Dal = userTableDAL;
         }
 
+        //public UserAdminVM GetVM(UserTable user)
+        //{
+
+        //    ReflectionHelper.CopyValue<UserTable, UserAdminVM>(user, this);
+        //    return this;
+        //}
+        //public List<UserAdminVM> GetVMList(List<UserTable> userList)
+        //{
+        //    List<UserAdminVM> vmlist = new List<UserAdminVM>();
+        //    UserAdminVM vm;
+        //    foreach (var user in userList)
+        //    {
+
+        //        vm = user.MapTo<UserAdminVM>();
+        //        //ReflectionHelper.CopyValue(user, vm);
+        //        vmlist.Add(vm);
+        //    }
+        //    return vmlist;
+        //}
+
+        //public UserTable GetUserTable(UserTable user)
+        //{
+        //    UserAdminVM vm = this;
+        //    ReflectionHelper.CopyValue(vm, user);
+        //    return user;
+        //}
     }
 }

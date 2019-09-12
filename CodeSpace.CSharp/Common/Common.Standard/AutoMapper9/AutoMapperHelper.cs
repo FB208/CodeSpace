@@ -42,5 +42,6 @@ namespace Common.Standard.AutoMapper9
 
             return mapper.Map<TDestination>(source);
         }
+
     }
 }

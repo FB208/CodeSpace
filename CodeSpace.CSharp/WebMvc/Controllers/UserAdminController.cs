@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common.Standard;
 using Common.Standard.AutoMapper9;
 using Microsoft.AspNetCore.Mvc;
 using WebMvc.IBLL.BBSAdmin;
@@ -32,97 +33,117 @@ namespace WebMvc.Controllers
                 Name = "张三"
             };
             var nuser = tuser.MapTo<UserDto>();
-
+            /*
+             
+              Mapper.CreateMap<Source, Target>()
+        .ConstructUsing(
+            f =>
+                new Target
+                    {
+                        PropVal1 = f.PropVal1,
+                        PropObj2 = Map<PropObj2Class>(f.PropObj2),
+                        PropVal4 = f.PropVal4
+                    })
+        .ForAllMembers(a => a.Ignore());
+             */
             int total = 0 ;
             List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true,out total).ToList();
-            List<UserAdminVM> list = new UserAdminVM(userTableService, keywordsService).GetVMList(userList);
+            List<UserAdminVM> list = new List<UserAdminVM>();
+            UserAdminVM vm;
+            foreach (var user in userList)
+            {
+                vm = new UserAdminVM();
+                //vm = user.MapTo<UserAdminVM>();
+                ReflectionHelper.CopyValue(user, vm);
+                list.Add(vm);
+            }
             ViewData["PageIndex"] = pageIndex;
             ViewData["PageSize"] = pageSize;
             ViewData["Total"] = total;
             return View(list);
         }
 
-        public IActionResult Create()
-        {
-            UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
-            return View(vm);
-        }
-        [HttpPost]
-        public IActionResult Create(UserAdminVM vm)
-        {
-            UserTable user = new UserTable();
-            user = vm.GetUserTable(user);
-            bool result = userTableService.Add(user);
-            if (result)
-            {
-                TempData["AlertMsg"] = "保存成功";
-                TempData["Href"] = "/UserAdmin/Index";
-            }
-            else
-            {
-                TempData["AlertMsg"] = "保存失败";
-            }
-            return View(vm);
-        }
-        public IActionResult Delete(string id)
-        {
-            UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
-            if (user != null)
-            {
-                bool result = userTableService.Delete(user);
-                if (result)
-                {
+        //public IActionResult Create()
+        //{
+        //    UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
+        //    return View(vm);
+        //}
+        //[HttpPost]
+        //public IActionResult Create(UserAdminVM vm)
+        //{
+        //    UserTable user = new UserTable();
+        //    user = vm.GetUserTable(user);
+        //    bool result = userTableService.Add(user);
+        //    if (result)
+        //    {
+        //        TempData["AlertMsg"] = "保存成功";
+        //        TempData["Href"] = "/UserAdmin/Index";
+        //    }
+        //    else
+        //    {
+        //        TempData["AlertMsg"] = "保存失败";
+        //    }
+        //    return View(vm);
+        //}
+        //public IActionResult Delete(string id)
+        //{
+        //    UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
+        //    if (user != null)
+        //    {
+        //        bool result = userTableService.Delete(user);
+        //        if (result)
+        //        {
 
-                    TempData["AlertMsg"] = "保存成功";
-                    return Redirect("/UserAdmin/Index");
-                }
-                else
-                {
-                    TempData["AlertMsg"] = "保存成功";
-                    return Redirect("/UserAdmin/Index");
-                }
+        //            TempData["AlertMsg"] = "保存成功";
+        //            return Redirect("/UserAdmin/Index");
+        //        }
+        //        else
+        //        {
+        //            TempData["AlertMsg"] = "保存成功";
+        //            return Redirect("/UserAdmin/Index");
+        //        }
                 
-            }
-            TempData["AlertMsg"] = "对象已被删除";
-            return Redirect("/UserAdmin/Index");
-        }
-        public IActionResult Edit(string id)
-        {
-            UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
-            UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
-            if (user!=null)
-            {
-                vm= vm.GetVM(user);
-            }
-            return View(vm);
-        }
-        [HttpPost]
-        public IActionResult Edit(string uuid, UserAdminVM vm)
-        {
-            UserTable user = userTableService.GetModels(m => m.Uuid == uuid).FirstOrDefault();
-            vm.GetUserTable(user);
-            bool result = userTableService.Update(user);
-            if (result)
-            {
-                TempData["AlertMsg"] = "保存成功";
-                TempData["Href"] = "/UserAdmin/Index";
-            }
-            else
-            {
-                TempData["AlertMsg"] = "保存失败";
-            }
-            return View(vm);
-        }
+        //    }
+        //    TempData["AlertMsg"] = "对象已被删除";
+        //    return Redirect("/UserAdmin/Index");
+        //}
+        //public IActionResult Edit(string id)
+        //{
+        //    UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
+        //    UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
+        //    if (user!=null)
+        //    {
+        //        vm= vm.GetVM(user);
+        //    }
+        //    return View(vm);
+        //}
+        //[HttpPost]
+        //public IActionResult Edit(string uuid, UserAdminVM vm)
+        //{
+        //    UserTable user = userTableService.GetModels(m => m.Uuid == uuid).FirstOrDefault();
+        //    vm.GetUserTable(user);
+        //    bool result = userTableService.Update(user);
+        //    if (result)
+        //    {
+        //        TempData["AlertMsg"] = "保存成功";
+        //        TempData["Href"] = "/UserAdmin/Index";
+        //    }
+        //    else
+        //    {
+        //        TempData["AlertMsg"] = "保存失败";
+        //    }
+        //    return View(vm);
+        //}
 
-        public IActionResult Details(string id)
-        {
-            UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
-            UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
-            if (user != null)
-            {
-                vm = vm.GetVM(user);
-            }
-            return View(vm);
-        }
+        //public IActionResult Details(string id)
+        //{
+        //    UserTable user = userTableService.GetModels(m => m.Uuid == id).FirstOrDefault();
+        //    UserAdminVM vm = new UserAdminVM(userTableService, keywordsService);
+        //    if (user != null)
+        //    {
+        //        vm = vm.GetVM(user);
+        //    }
+        //    return View(vm);
+        //}
     }
 }
