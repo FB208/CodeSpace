@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Common.Standard.AutoMapper9;
 using Microsoft.AspNetCore.Mvc;
 using WebMvc.IBLL.BBSAdmin;
 //using WebMvc.BLLContainer;
@@ -12,17 +14,24 @@ namespace WebMvc.Controllers
 {
     public class UserAdminController : BaseController
     {
-
+        private IMapper Mapper { get; }
         private readonly IUserTableService userTableService;
         private readonly IKeywordsService keywordsService;
-        public UserAdminController(IUserTableService iUserTableService, IKeywordsService iKeywordsService)
+        public UserAdminController(IUserTableService iUserTableService, IKeywordsService iKeywordsService,IMapper mapper)
         {
             userTableService = iUserTableService;
             keywordsService = iKeywordsService;
+            Mapper = mapper;
         }
         //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         public IActionResult Index(int pageSize=5,int pageIndex=1)
         {
+            User tuser = new User()
+            {
+                ID = 1,
+                Name = "张三"
+            };
+            var nuser = tuser.MapTo<UserDto>();
 
             int total = 0 ;
             List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true,out total).ToList();

@@ -17,6 +17,9 @@ using WebMvc.BLL.BBSAdmin;
 using WebMvc.DAL.BBSAdmin;
 using WebMvc.IDAL.BBSAdmin;
 using WebMvc.ViewModel;
+using AutoMapper;
+using System.Reflection;
+using Common.Standard.AutoMapper9;
 
 namespace WebMvc
 {
@@ -44,9 +47,11 @@ namespace WebMvc
             });
             //用于直接读取数据库，不走框架(该注入仅用于测试)
             services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BBSAdminConnection")));
-
+            services.AddSingleton<AutoInjectFactory>();
+            services.AddAutoMapper();
+            
             services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            
 
             // Create the container builder.
             var builder = new ContainerBuilder();
@@ -67,6 +72,8 @@ namespace WebMvc
             builder.RegisterType<KeywordsDAL>().As<IKeywordsDAL>();
             builder.RegisterType<KeywordsService>().As<IKeywordsService>();
             builder.RegisterType<UserAdminVM>();
+
+
             this.ApplicationContainer = builder.Build();
 
             // Create the IServiceProvider based on the container.
@@ -91,6 +98,12 @@ namespace WebMvc
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            //Mappings.RegisterMappings();
+            app.UseStateAutoMapper();
+            app.UseAutoInject(Assembly.Load("WebMvc"));
+            
+            //var expression = app.UseAutoMapper();
+            //expression.CreateMap<User, UserDto>();
 
             app.UseMvc(routes =>
             {

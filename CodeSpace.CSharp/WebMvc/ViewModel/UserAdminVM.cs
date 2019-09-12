@@ -93,6 +93,7 @@ namespace WebMvc.ViewModel
 
         public UserAdminVM GetVM(UserTable user)
         {
+            
             ReflectionHelper.CopyValue<UserTable, UserAdminVM>(user, this);
             return this;
         }
