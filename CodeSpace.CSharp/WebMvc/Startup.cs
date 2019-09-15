@@ -100,6 +100,7 @@ namespace WebMvc
 
             var expression = app.UseAutoMapper();
             expression.CreateMap<User, UserDto>().ForAllMembers(opt => opt.Ignore());
+            expression.CreateMap<Head, UserDto>().ForAllMembers(opt => opt.Ignore());
 
             app.UseMvc(routes =>
             {

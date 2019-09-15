@@ -21,9 +21,10 @@ namespace WebMvc.ViewModel
                 id = value;
             }
         }
-        [Display(Name = "账号")]
+        
         public string Name { get; set; }
         public string RoleFlags { get; set; }
-        
+        public string Eye { get; set; }
+
     }
 }

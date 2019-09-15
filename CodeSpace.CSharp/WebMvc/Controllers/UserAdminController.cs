@@ -32,7 +32,14 @@ namespace WebMvc.Controllers
                 ID = 1,
                 Name = "张三"
             };
-            var nuser = tuser.MapTo<UserDto>();
+            Head head = new Head()
+            {
+                Eye = "眼",
+                Mouth = "嘴"
+            };
+            UserDto nuser = new UserDto();
+            nuser=nuser.Map<User, UserDto>(tuser);
+            nuser=nuser.Map<Head, UserDto>(head);
             /*
              
               Mapper.CreateMap<Source, Target>()

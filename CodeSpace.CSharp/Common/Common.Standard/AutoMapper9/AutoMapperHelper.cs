@@ -16,25 +16,25 @@ namespace Common.Standard.AutoMapper9
             ServiceProvider = applicationBuilder.ApplicationServices;
         }
 
-        public static TDestination Map<TDestination>(object source)
-        {
-            var mapper = ServiceProvider.GetRequiredService<IMapper>();
+        //public static TDestination Map<TDestination>(object source)
+        //{
+        //    var mapper = ServiceProvider.GetRequiredService<IMapper>();
 
-            return mapper.Map<TDestination>(source);
-        }
+        //    return mapper.Map<TDestination>(source);
+        //}
 
-        public static TDestination Map<TSource, TDestination>(TSource source)
-        {
-            var mapper = ServiceProvider.GetRequiredService<IMapper>();
+        //public static TDestination Map<TSource, TDestination>(TSource source)
+        //{
+        //    var mapper = ServiceProvider.GetRequiredService<IMapper>();
 
-            return mapper.Map<TSource, TDestination>(source);
-        }
-        public static TDestination MapTo<TSource, TDestination>(this TSource source)
-        {
-            var mapper = ServiceProvider.GetRequiredService<IMapper>();
+        //    return mapper.Map<TSource, TDestination>(source);
+        //}
+        //public static TDestination MapTo<TSource, TDestination>(this TSource source)
+        //{
+        //    var mapper = ServiceProvider.GetRequiredService<IMapper>();
 
-            return mapper.Map<TSource, TDestination>(source);
-        }
+        //    return mapper.Map<TSource, TDestination>(source);
+        //}
 
         public static TDestination MapTo<TDestination>(this object source)
         {
@@ -42,6 +42,8 @@ namespace Common.Standard.AutoMapper9
 
             return mapper.Map<TDestination>(source);
         }
-
+        public static TDestination Map<TSource, TDestination>(this TDestination destination, TSource source) {
+            var mapper = ServiceProvider.GetRequiredService<IMapper>();
+            return mapper.Map(source, destination); }
     }
 }
