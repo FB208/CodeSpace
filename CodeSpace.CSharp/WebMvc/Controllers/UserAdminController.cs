@@ -24,22 +24,27 @@ namespace WebMvc.Controllers
             keywordsService = iKeywordsService;
             Mapper = mapper;
         }
+        
         //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         public IActionResult Index(int pageSize=5,int pageIndex=1)
         {
-            User tuser = new User()
-            {
-                ID = 1,
-                Name = "张三"
-            };
-            Head head = new Head()
-            {
-                Eye = "眼",
-                Mouth = "嘴"
-            };
-            UserDto nuser = new UserDto();
-            nuser=nuser.Map<User, UserDto>(tuser);
-            nuser=nuser.Map<Head, UserDto>(head);
+  
+            //User tuser = new User()
+            //{
+            //    ID = 1,
+            //    Name = "张三"
+            //};
+            //Head head = new Head()
+            //{
+            //    Eye = "眼"
+            //};
+
+            ////UserDto nuser = new UserDto();
+            ////nuser = tuser.MapTo<UserDto>();
+            //UserDto nuser = Mapper.Map<UserDto>(tuser);
+            //UserDto nuser2 = Mapper.Map(head, nuser);
+                //.MapPart(head);
+            new UserDtoHelper().GetDto();
             /*
              
               Mapper.CreateMap<Source, Target>()

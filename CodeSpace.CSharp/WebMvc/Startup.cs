@@ -96,11 +96,11 @@ namespace WebMvc
             app.UseCookiePolicy();
             //Mappings.RegisterMappings();
             app.UseStateAutoMapper();
-            app.UseAutoInject(Assembly.Load("WebMvc"));
+            //app.UseAutoInject(Assembly.Load("WebMvc"));
 
             var expression = app.UseAutoMapper();
-            expression.CreateMap<User, UserDto>().ForAllMembers(opt => opt.Ignore());
-            expression.CreateMap<Head, UserDto>().ForAllMembers(opt => opt.Ignore());
+            expression.CreateMap<User, UserDto>();
+            expression.CreateMap<Head, UserDto>().ForMember(m => m.Eye, a => a.MapFrom(s => s.Eye));
 
             app.UseMvc(routes =>
             {

@@ -13,17 +13,11 @@ namespace WebMvc.ViewModel
     public class UserDto
     {
         public UserDto() { }
-        List<Keywords> keywords =new List<Keywords>() { new Keywords() { } };
-        private int? id;
-        public int ID {
-            get { return id ?? 1; }
-            set {
-                id = value;
-            }
-        }
-        
+
+        public int ID { get; set; }
+
         public string Name { get; set; }
-        public string RoleFlags { get; set; }
+        //public string RoleFlags { get; set; }
         public string Eye { get; set; }
 
     }

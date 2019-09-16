@@ -7,7 +7,7 @@ namespace WebMvc.ViewModel
 {
     public class Head
     {
-        public string Mouth { get; set; }
+        //public string Mouth { get; set; }
         public string Eye { get; set; }
     }
 }

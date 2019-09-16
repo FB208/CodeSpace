@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebMvc.IBLL", "..\WebMvc.BL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Standard", "..\Common\Common.Standard\Common.Standard.csproj", "{11C25813-35CE-4F4D-A322-10CC324F491C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMvc.MSTest", "..\WebMvc.MSTest\WebMvc.MSTest\WebMvc.MSTest.csproj", "{E58AE324-F25E-40FE-99AB-3BD6F9A266B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{11C25813-35CE-4F4D-A322-10CC324F491C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11C25813-35CE-4F4D-A322-10CC324F491C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11C25813-35CE-4F4D-A322-10CC324F491C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58AE324-F25E-40FE-99AB-3BD6F9A266B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58AE324-F25E-40FE-99AB-3BD6F9A266B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58AE324-F25E-40FE-99AB-3BD6F9A266B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58AE324-F25E-40FE-99AB-3BD6F9A266B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

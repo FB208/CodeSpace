@@ -20,7 +20,7 @@ namespace Common.Standard.AutoMapper9
                 var mapperConfigurationExpression = serviceProvider.GetRequiredService<MapperConfigurationExpression>();
                 var instance = new MapperConfiguration(mapperConfigurationExpression);
 
-                instance.AssertConfigurationIsValid();
+                //instance.AssertConfigurationIsValid();
 
                 return instance;
             });
