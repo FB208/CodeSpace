@@ -44,7 +44,7 @@ namespace WebMvc
             });
             //用于直接读取数据库，不走框架(该注入仅用于测试)
             services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseMySQL(Configuration.GetConnectionString("BBSAdmin_MySqlConnection")));
-            services.AddSingleton<AutoInjectFactory>();
+            //services.AddSingleton<AutoInjectFactory>();
             services.AddAutoMapper();
             
             services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
