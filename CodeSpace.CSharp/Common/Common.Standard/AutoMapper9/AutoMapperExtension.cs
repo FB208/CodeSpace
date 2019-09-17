@@ -20,7 +20,7 @@ namespace Common.Standard.AutoMapper9
                 var mapperConfigurationExpression = serviceProvider.GetRequiredService<MapperConfigurationExpression>();
                 var instance = new MapperConfiguration(mapperConfigurationExpression);
 
-                //instance.AssertConfigurationIsValid();
+                //instance.AssertConfigurationIsValid();严禁格式校验，会导致多个实体映射到一个dto时，第二个失效
 
                 return instance;
             });

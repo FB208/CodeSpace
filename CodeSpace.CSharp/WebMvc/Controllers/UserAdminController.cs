@@ -6,6 +6,8 @@ using AutoMapper;
 using Common.Standard;
 using Common.Standard.AutoMapper9;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using WebMvc.DemoClass.AutoMapperDemo;
 using WebMvc.IBLL.BBSAdmin;
 //using WebMvc.BLLContainer;
 using WebMvc.Model.BBSAdmin;
@@ -28,7 +30,7 @@ namespace WebMvc.Controllers
         //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         public IActionResult Index(int pageSize=5,int pageIndex=1)
         {
-  
+
             //User tuser = new User()
             //{
             //    ID = 1,
@@ -43,7 +45,11 @@ namespace WebMvc.Controllers
             ////nuser = tuser.MapTo<UserDto>();
             //UserDto nuser = Mapper.Map<UserDto>(tuser);
             //UserDto nuser2 = Mapper.Map(head, nuser);
-                //.MapPart(head);
+            //.MapPart(head);
+            PhysicalAttribute physical = new PhysicalAttribute() { Eye = "双眼皮", Mouth = "红润" };
+            SocialAttribute social = new SocialAttribute() { Name = "张三", IsMarried = false, Age = 18 };
+            PeopleDto output = new DtoHelper().GetDto(physical, social);
+            string json = JsonConvert.SerializeObject(output);
             new UserDtoHelper().GetDto();
             /*
              

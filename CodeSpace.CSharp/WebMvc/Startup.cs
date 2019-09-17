@@ -20,6 +20,7 @@ using WebMvc.ViewModel;
 using AutoMapper;
 using System.Reflection;
 using Common.Standard.AutoMapper9;
+using WebMvc.DemoClass.AutoMapperDemo;
 
 namespace WebMvc
 {
@@ -101,6 +102,14 @@ namespace WebMvc
             var expression = app.UseAutoMapper();
             expression.CreateMap<User, UserDto>();
             expression.CreateMap<Head, UserDto>().ForMember(m => m.Eye, a => a.MapFrom(s => s.Eye));
+
+            expression.CreateMap<PhysicalAttribute, PeopleDto>()
+                .ForMember(m => m.Eye, n => n.MapFrom(s => s.Eye))
+                .ForMember(m => m.Mouth, n => n.MapFrom(s => s.Mouth));
+            //.ForMember(m => m.Ear, n => n.Ignore());
+            expression.CreateMap<SocialAttribute, PeopleDto>()
+                .ForMember(m => m.Age, n => n.MapFrom(s => s.Age))
+                .ForMember(m => m.IsMarried, n => n.MapFrom(s => s.IsMarried));
 
             app.UseMvc(routes =>
             {

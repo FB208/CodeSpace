@@ -15,12 +15,12 @@ namespace WebMvc.MSTest
         public void TestMethod1()
         {
             UserDto result = new UserDto() { ID = 1, Name = "张三",
-                //Eye = "眼"
+                Eye = "眼"
             };
             UserDto output=new UserDtoHelper().GetDto();
 
-            PropertyInfo[] pis_result = result.GetType().GetProperties();
-            PropertyInfo[] pis_output = output.GetType().GetProperties();
+            //PropertyInfo[] pis_result = result.GetType().GetProperties();
+            //PropertyInfo[] pis_output = output.GetType().GetProperties();
             //for (int i = 0; i < pis_result.Length; i++)
             //{
             //    for (int j = 0; j < pis_output.Length; j++)
