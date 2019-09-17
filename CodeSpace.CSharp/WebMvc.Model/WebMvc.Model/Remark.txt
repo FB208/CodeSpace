@@ -1,5 +1,10 @@
 ﻿'更新实体数据模型
+'MSSQL
 Scaffold-DbContext "Data Source=.;Initial Catalog=BBSAdmin;User ID=sa;Password=Yang123!@#" Microsoft.EntityFrameworkCore.SqlServer -outputDir BBSAdmin -force
+
+'MySql
+Scaffold-DbContext "Server=47.244.30.7;User Id=root;Password=Yang123!@#;Database=BBSAdmin" Pomelo.EntityFrameworkCore.MySql -outputDir BBSAdmin -force
+
 
 -OutputDir *** 实体文件所存放的文件目录
 -ContextDir *** DbContext文件存放的目录

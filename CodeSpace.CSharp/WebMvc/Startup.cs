@@ -42,7 +42,7 @@ namespace WebMvc
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             //用于直接读取数据库，不走框架(该注入仅用于测试)
-            services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BBSAdminConnection")));
+            services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseMySQL(Configuration.GetConnectionString("BBSAdmin_MySqlConnection")));
             services.AddSingleton<AutoInjectFactory>();
             services.AddAutoMapper();
             
