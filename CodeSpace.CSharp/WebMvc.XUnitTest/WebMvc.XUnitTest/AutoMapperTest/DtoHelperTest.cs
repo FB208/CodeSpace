@@ -6,18 +6,21 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WebMvc.Components;
 using WebMvc.DemoClass.AutoMapperDemo;
 using WebMvc.XUnitTest.AutoMapperTest;
 using Xunit;
 
-namespace WebMvc.XUnitTest
+namespace WebMvc.XUnitTest.AutoMapperTest
 {
     
-    public class DtoHelperTest:Injection
+    public class DtoHelperTest
     {
         [Fact]
         public void GetDto() {
-            base.Load(new ContainerBuilder());
+            AutoMapperInjection inject = new AutoMapperInjection(new ContainerBuilder());
+            inject.Load();
+            IContainer Container = inject.builder.Build();
             using (var scope = Container.BeginLifetimeScope())
             {
                 PeopleDto result = new PeopleDto() { Eye = "双眼皮", Mouth = "红润", Age = 18, IsMarried = false };

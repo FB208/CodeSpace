@@ -21,13 +21,14 @@ using AutoMapper;
 using System.Reflection;
 using Common.Standard.AutoMapper9;
 using WebMvc.DemoClass.AutoMapperDemo;
+using WebMvc.Components;
 
 namespace WebMvc
 {
     public class Startup
     {
         //public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
+        public IContainer ApplicationContainer { get; set; }
 
         public IConfiguration Configuration { get; private set; }
         public Startup(IConfiguration configuration)
@@ -45,7 +46,7 @@ namespace WebMvc
             //用于直接读取数据库，不走框架(该注入仅用于测试)
             services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseMySQL(Configuration.GetConnectionString("BBSAdmin_MySqlConnection")));
             //services.AddSingleton<AutoInjectFactory>();
-            services.AddAutoMapper();
+            //services.AddAutoMapper();
             
             services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
@@ -69,6 +70,11 @@ namespace WebMvc
             builder.RegisterType<KeywordsDAL>().As<IKeywordsDAL>();
             builder.RegisterType<KeywordsService>().As<IKeywordsService>();
             builder.RegisterType<UserAdminVM>();
+
+            //automapper
+            builder.RegisterType<AutoMapperInjection>().WithParameter("_builder",builder);
+            builder.RegisterType<AutoMapperProfile>();
+
 
 
             this.ApplicationContainer = builder.Build();
@@ -95,21 +101,26 @@ namespace WebMvc
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            using (var scope = this.ApplicationContainer.BeginLifetimeScope())
+            {
+                var ss = scope.Resolve<AutoMapperInjection>().Load();
+                scope.Resolve<AutoMapperProfile>().Mapping(ss);
+            }
             //Mappings.RegisterMappings();
-            app.UseStateAutoMapper();
+            //app.UseStateAutoMapper();
             //app.UseAutoInject(Assembly.Load("WebMvc"));
 
-            var expression = app.UseAutoMapper();
-            expression.CreateMap<User, UserDto>();
-            expression.CreateMap<Head, UserDto>().ForMember(m => m.Eye, a => a.MapFrom(s => s.Eye));
+            //var expression = app.UseAutoMapper();
+            //expression.CreateMap<User, UserDto>();
+            //expression.CreateMap<Head, UserDto>().ForMember(m => m.Eye, a => a.MapFrom(s => s.Eye));
 
-            expression.CreateMap<PhysicalAttribute, PeopleDto>()
-                .ForMember(m => m.Eye, n => n.MapFrom(s => s.Eye))
-                .ForMember(m => m.Mouth, n => n.MapFrom(s => s.Mouth));
-            //.ForMember(m => m.Ear, n => n.Ignore());
-            expression.CreateMap<SocialAttribute, PeopleDto>()
-                .ForMember(m => m.Age, n => n.MapFrom(s => s.Age))
-                .ForMember(m => m.IsMarried, n => n.MapFrom(s => s.IsMarried));
+            //expression.CreateMap<PhysicalAttribute, PeopleDto>()
+            //    .ForMember(m => m.Eye, n => n.MapFrom(s => s.Eye))
+            //    .ForMember(m => m.Mouth, n => n.MapFrom(s => s.Mouth));
+            ////.ForMember(m => m.Ear, n => n.Ignore());
+            //expression.CreateMap<SocialAttribute, PeopleDto>()
+            //    .ForMember(m => m.Age, n => n.MapFrom(s => s.Age))
+            //    .ForMember(m => m.IsMarried, n => n.MapFrom(s => s.IsMarried));
 
             app.UseMvc(routes =>
             {
