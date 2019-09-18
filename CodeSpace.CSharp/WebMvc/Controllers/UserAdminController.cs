@@ -49,10 +49,10 @@ namespace WebMvc.Controllers
             PhysicalAttribute physical = new PhysicalAttribute() { Eye = "双眼皮", Mouth = "红润" };
             SocialAttribute social = new SocialAttribute() { Name = "张三", IsMarried = false, Age = 18 };
             PeopleDto dto=new PeopleDto();
-            Mapper.Map(social, Mapper.Map(physical, dto));
-            PeopleDto output = new DtoHelper().GetDto(physical, social);
+            //Mapper.Map(social, Mapper.Map(physical, dto));
+            PeopleDto output = new DtoHelper(Mapper).GetDto(physical, social);
             string json = JsonConvert.SerializeObject(output);
-            new UserDtoHelper().GetDto();
+          
             /*
              
               Mapper.CreateMap<Source, Target>()

@@ -9,11 +9,13 @@ namespace WebMvc.DemoClass.AutoMapperDemo
 {
     public class DtoHelper
     {
-
-
+        private IMapper mapper;
+        public DtoHelper(IMapper _mapper) {
+            mapper = _mapper;
+        }
         public PeopleDto GetDto(PhysicalAttribute physical,SocialAttribute social) {
-            var peopleDto = AutoMapperHelper.Map<PeopleDto>(physical)
-                .MapPart(social);
+            PeopleDto peopleDto = new PeopleDto();
+            mapper.Map(social, mapper.Map(physical, peopleDto));
             return peopleDto;
         }
     }
