@@ -15,12 +15,11 @@ namespace WebMvc.ViewModel
 
     public class UserAdminVM
     {
-
-        public UserAdminVM() { }
-
-        List<Keywords> keywords;
-
-        
+        protected List<Keywords> keywords;
+        public UserAdminVM() {
+            keywords = new List<Keywords>();
+        }
+        #region 属性
         private string uuid;
         public string Uuid
         {
@@ -83,7 +82,20 @@ namespace WebMvc.ViewModel
         public string HomePage { get; set; }
         [Display(Name = "电话")]
         public string Tel { get; set; }
+        #endregion
+        #region 方法
+        /// <summary>
+        /// 设置视图用到的字典
+        /// </summary>
+        /// <param name="_keywords"></param>
+        public void SetKeywords(List<Keywords> _keywords) {
+            keywords = _keywords;
+        }
+        #endregion
 
-        
+
+
+
+
     }
 }
