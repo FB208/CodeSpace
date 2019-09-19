@@ -26,7 +26,7 @@ namespace WebMvc.Components
                 .ForMember(m => m.IsMarried, n => n.MapFrom(s => s.IsMarried));
             #endregion
             #region UserAdminVM
-            expression.CreateMap<UserTable, UserAdminVM>();
+            //expression.CreateMap<UserTable, UserAdminVM>();
             #endregion
         }
     }
