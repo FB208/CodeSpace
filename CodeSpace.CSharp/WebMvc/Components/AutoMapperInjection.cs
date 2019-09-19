@@ -5,16 +5,10 @@ using WebMvc.DemoClass.AutoMapperDemo;
 
 namespace WebMvc.Components
 {
-    public class AutoMapperInjection
+    public static class AutoMapperInjection
     {
-        public ContainerBuilder builder { get; set; }
-
-        public AutoMapperInjection(ContainerBuilder _builder) {
-            builder = _builder;
-        }
-        public ContainerBuilder Load()
+        public static ContainerBuilder LoadAutoMapper(this ContainerBuilder builder)
         {
-
             builder.RegisterType<MapperConfigurationExpression>().SingleInstance();
             builder.Register(m => {
                 var mapperConfigurationExpression = m.Resolve<MapperConfigurationExpression>();

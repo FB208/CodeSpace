@@ -72,8 +72,13 @@ namespace WebMvc
             builder.RegisterType<UserAdminVM>();
 
             //automapper
-            builder.RegisterType<AutoMapperInjection>().WithParameter("_builder",builder);
+            builder=builder.LoadAutoMapper();
+            //builder.RegisterType<AutoMapperInjection>().WithParameter("_builder",builder);
             builder.RegisterType<AutoMapperProfile>();
+            //builder.RegisterType<AutoMapperProfile>().OnActivating(e=> {
+            //    var result = e.Context.Resolve<AutoMapperInjection>().Load();
+            //    e.Instance.Mapping(result);
+            //});
 
 
 
@@ -83,8 +88,9 @@ namespace WebMvc
             return new AutofacServiceProvider(this.ApplicationContainer);
 
         }
-       
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -103,8 +109,9 @@ namespace WebMvc
             app.UseCookiePolicy();
             using (var scope = this.ApplicationContainer.BeginLifetimeScope())
             {
-                var ss = scope.Resolve<AutoMapperInjection>().Load();
-                scope.Resolve<AutoMapperProfile>().Mapping(ss);
+                scope.Resolve<AutoMapperProfile>().Mapping(scope);
+
+
             }
             //Mappings.RegisterMappings();
             //app.UseStateAutoMapper();

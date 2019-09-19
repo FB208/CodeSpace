@@ -12,6 +12,5 @@ namespace WebMvc.DemoClass.AutoMapperDemo
     {
         public string Eye { get; set; }
         public string Mouth { get; set; }
-        
     }
 }

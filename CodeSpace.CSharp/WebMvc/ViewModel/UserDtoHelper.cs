@@ -22,8 +22,8 @@ namespace WebMvc.ViewModel
             };
             UserDto nuser = new UserDto();
             //nuser = tuser.MapTo<UserDto>();
-            nuser = AutoMapperHelper.Map<UserDto>(tuser)
-                .MapPart(head);
+            //nuser = AutoMapperHelper.Map<UserDto>(tuser)
+              //  .MapPart(head);
             //UserDto nuser = new UserDto() { ID=1};
 
             return nuser;
