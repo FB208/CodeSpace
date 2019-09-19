@@ -30,42 +30,8 @@ namespace WebMvc.Controllers
         //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         public IActionResult Index(int pageSize=5,int pageIndex=1)
         {
+            
 
-            //User tuser = new User()
-            //{
-            //    ID = 1,
-            //    Name = "张三"
-            //};
-            //Head head = new Head()
-            //{
-            //    Eye = "眼"
-            //};
-
-            ////UserDto nuser = new UserDto();
-            ////nuser = tuser.MapTo<UserDto>();
-            //UserDto nuser = Mapper.Map<UserDto>(tuser);
-            //UserDto nuser2 = Mapper.Map(head, nuser);
-            //.MapPart(head);
-            PhysicalAttribute physical = new PhysicalAttribute() { Eye = "双眼皮", Mouth = "红润" };
-            SocialAttribute social = new SocialAttribute() { Name = "张三", IsMarried = false, Age = 18 };
-            PeopleDto dto=new PeopleDto();
-            //Mapper.Map(social, Mapper.Map(physical, dto));
-            PeopleDto output = new DtoHelper(Mapper).GetDto(physical, social);
-            string json = JsonConvert.SerializeObject(output);
-          
-            /*
-             
-              Mapper.CreateMap<Source, Target>()
-        .ConstructUsing(
-            f =>
-                new Target
-                    {
-                        PropVal1 = f.PropVal1,
-                        PropObj2 = Map<PropObj2Class>(f.PropObj2),
-                        PropVal4 = f.PropVal4
-                    })
-        .ForAllMembers(a => a.Ignore());
-             */
             int total = 0 ;
             List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true,out total).ToList();
             List<UserAdminVM> list = new List<UserAdminVM>();
