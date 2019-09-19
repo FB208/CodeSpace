@@ -9,6 +9,7 @@ using WebMvc.Emit;
 using WebMvc.Filter;
 using WebMvc.ViewModel;
 using WebMvc.Model.BBSAdmin;
+using Common.Standard.EFCore;
 
 namespace WebMvc.Controllers
 {
@@ -25,14 +26,14 @@ namespace WebMvc.Controllers
         public async Task<IActionResult> Index()
         {
             List<UserTable> model = _context.UserTable.ToList();
+            var ss = _context.UserTable.Where(m => m.UserName == "admin");
+            string sql = ss.ToSql();
 
-           
-            
             //new PersonEmit().Do();
 
-            
+
             //
-            
+
             return View(model);
         }
 

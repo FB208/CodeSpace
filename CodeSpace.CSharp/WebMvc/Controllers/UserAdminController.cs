@@ -12,6 +12,7 @@ using WebMvc.IBLL.BBSAdmin;
 //using WebMvc.BLLContainer;
 using WebMvc.Model.BBSAdmin;
 using WebMvc.ViewModel;
+using Common.Standard.EFCore;
 
 namespace WebMvc.Controllers
 {
@@ -35,6 +36,7 @@ namespace WebMvc.Controllers
             int total = 0 ;
             List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true,out total).ToList();
             List<UserAdminVM> list = new List<UserAdminVM>();
+            string sql =keywordsService.GetModels(m => true).ToSql();
             List<Keywords> keywords = keywordsService.GetModels(m => true).ToList();
             UserAdminVM vm;
             foreach (var user in userList)
@@ -113,7 +115,6 @@ namespace WebMvc.Controllers
         {
             UserTable user = userTableService.GetModels(m => m.Uuid == uuid).FirstOrDefault();
             Mapper.Map(vm, user);
-            
             bool result = userTableService.Update(user);
             if (result)
             {

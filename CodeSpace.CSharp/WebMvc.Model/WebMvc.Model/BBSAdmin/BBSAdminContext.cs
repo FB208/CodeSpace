@@ -1,10 +1,15 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
 
 namespace WebMvc.Model.BBSAdmin
 {
     public partial class BBSAdminContext : DbContext
     {
+        [Obsolete]
+        //public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] { new DebugLoggerProvider((_, __) => true) });
+        //public static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] { new ConsoleLoggerProvider((_, __) => true, true) });
         public BBSAdminContext()
         {
         }
@@ -18,12 +23,11 @@ namespace WebMvc.Model.BBSAdmin
         public virtual DbSet<TestTable> TestTable { get; set; }
         public virtual DbSet<UserTable> UserTable { get; set; }
 
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-
-            }
+            //base.OnConfiguring(optionsBuilder);
+            //optionsBuilder.UseLoggerFactory(LoggerFactory);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
