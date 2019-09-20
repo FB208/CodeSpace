@@ -1,0 +1,110 @@
+/*主色调，背景色*/
+@mainColor:#015289;
+/*淡灰色，不重要的文字用*/
+@unimportaceColor:#1f41637a;
+body{
+    /*背景图片设置*/
+    background-color:@mainColor;
+   
+}
+a{
+    text-decoration: none;
+    color:black;
+}
+/* 头部 */
+#header{
+    height:490px;
+    background-image: url("http://cnblogs.cn-bj.ufileos.com/%E5%8D%9A%E5%AE%A2%E8%83%8C%E6%99%AF.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+}
+/* 左上角博客名称 */
+#Header1_HeaderTitle{
+    text-decoration: none;
+    color: white;
+    font-size: 1.6em;
+    font-family: Georgia;
+}
+/* 隐藏头部博客状态 */
+#sub{
+    display: none;
+
+}
+/* 列表容器 */
+#main_container{
+    background-color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 0px 0px 0px 20px;
+    margin: 0px 20px 0px 20px;
+    min-height: 200px;
+    /*maincontent和leftmenu并排*/
+    text-overflow: ellipsis;
+    overflow: hidden;
+    float: none;
+    #main_content{
+        width:70%;
+        float:left;
+        display: inline;
+        padding-right:20px;
+        #content{
+
+            /* 列表头部时间 */
+            .date{
+                display: none;
+            }
+            .post{
+                /* 列表标题 */
+                .postTitle2{
+                    text-decoration: none;
+                    color:@mainColor;
+                    font-size:32px;
+                }
+                .postbody{
+                    .c_b_p_desc_readmore{
+                        text-decoration: none;
+                        color: @unimportaceColor;
+                    }
+                }
+                .postfoot{
+                    font-size:14px;
+                    color: @unimportaceColor;
+                }
+            }
+        }
+    }
+    #leftmenu{
+        width:25%;
+        float:right;
+        display: inline;
+        padding-left: 20px;
+        border-left: dotted 1px @unimportaceColor;
+        background-color:#e2cfaf;
+        background-image: url("http://cnblogs.cn-bj.ufileos.com/%E5%AF%BC%E8%88%AA.jpg");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        padding-right:20px;
+        ul{
+            li{
+                list-style-type: none;
+                line-height: 1.8em;
+            }
+            li:hover{
+                list-style-image: url("http://cnblogs.cn-bj.ufileos.com/%E5%96%B5%E7%8C%AB.png");
+            }
+        }
+    }
+
+}
+
+#footer{
+    background-color: white;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-top: 0px;
+    display: none;
+}
