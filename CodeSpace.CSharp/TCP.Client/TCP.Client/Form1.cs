@@ -98,5 +98,12 @@ namespace TCP.Client
              
 
         }
+
+        private void Btn_CreateTcpService_Click(object sender, EventArgs e)
+        {
+            TCP.CreateListener form = new TCP.CreateListener();
+            form.Show();
+            
+        }
     }
 }
