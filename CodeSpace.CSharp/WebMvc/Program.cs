@@ -20,6 +20,7 @@ namespace WebMvc
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+            .UseUrls("http://*:5000;https://*:5001")
                 //.ConfigureServices(services=>services.AddAutofac())
                 .UseStartup<Startup>();
     }
