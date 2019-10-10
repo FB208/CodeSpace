@@ -31,8 +31,6 @@ namespace WebMvc.Controllers
         //private IUserTableService userTableService = BLLContainer.Container.Resolve<IUserTableService>();
         public IActionResult Index(int pageSize=5,int pageIndex=1)
         {
-            
-
             int total = 0 ;
             List<UserTable> userList = userTableService.GetModelsByPage(pageSize,pageIndex,true,m=>m.Uuid,n=>true,out total).ToList();
             List<UserAdminVM> list = new List<UserAdminVM>();
