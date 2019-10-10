@@ -20,7 +20,12 @@ namespace TCP.Client.TCP
         delegate void myDelegate<T>(T t);
         myDelegate<string> myD_ShowMessage;
         private static byte[] result = new byte[1024*100];
-        public static List<TcpClient> clients = new List<TcpClient>();
+        public static List<TcpClientModel> clients = new List<TcpClientModel>();
+        public class TcpClientModel
+        {
+            public string RemoteEndPoint { get; set; }
+            public TcpClient TcpClient { get; set; }
+        }
         public ListenerView()
         {
             InitializeComponent();
@@ -32,6 +37,12 @@ namespace TCP.Client.TCP
             myD_ShowMessage = new myDelegate<string>(ShowMessage);
             InitializeComponent();
             Init();
+        }
+        void BindClientList() {
+            cb_client.DataSource = clients;
+            cb_client.DisplayMember = "RemoteEndPoint";
+            cb_client.ValueMember = "TcpClient";
+
         }
         void Init()
         {
@@ -83,7 +94,7 @@ namespace TCP.Client.TCP
 
             TcpClient client = listener.EndAcceptTcpClient(State);
 
-            clients.Add(client);
+            clients.Add(new TcpClientModel() { TcpClient=client,RemoteEndPoint=client.Client.RemoteEndPoint.ToString()});
 
             Invoke(myD_ShowMessage,$"\n收到新客户端:{client.Client.RemoteEndPoint.ToString()}");
             //开启线程用来持续收来自客户端的数据
@@ -133,7 +144,7 @@ namespace TCP.Client.TCP
                 }
                 catch (Exception e)
                 {
-                    clients.Remove(client);
+                    clients.Remove(clients.FirstOrDefault(m => m.RemoteEndPoint == client.Client.RemoteEndPoint.ToString()));
                     Invoke(myD_ShowMessage, "error:" + e.ToString());
                     break;
                 }
@@ -184,6 +195,26 @@ namespace TCP.Client.TCP
                     //tcpclient.Close();
                 }
             }
+        }
+
+        private void Btn_refreshClient_Click(object sender, EventArgs e)
+        {
+            BindClientList();
+        }
+
+        private void Btn_sentToClient_Click(object sender, EventArgs e)
+        {
+            TcpClient client = (TcpClient)cb_client.SelectedValue;
+            NetworkStream stream;
+
+
+            //服务器收到消息后并会给客户端一个消息。
+            string msg = tb_data.Text;
+                result = Encoding.UTF8.GetBytes(msg);
+                stream = client.GetStream();
+                stream.Write(result, 0, result.Length);
+                stream.Flush();
+         
         }
     }
 }
