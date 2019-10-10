@@ -18,6 +18,7 @@ namespace TCP.Client.TCP
         private string _ip;
         private int _port;
         delegate void myDelegate<T>(T t);
+        myDelegate<string> myD_ShowMessage;
         private static byte[] result = new byte[1024*100];
         public static List<TcpClient> clients = new List<TcpClient>();
         public ListenerView()
@@ -28,14 +29,9 @@ namespace TCP.Client.TCP
         {
             _ip = ip;
             _port = port;
+            myD_ShowMessage = new myDelegate<string>(ShowMessage);
             InitializeComponent();
             Init();
-            //new Thread(() =>
-            //{
-            //    myDelegate myD = new myDelegate(Init);
-            //    Invoke(myD);
-            //}).Start();
-
         }
         void Init()
         {
@@ -89,15 +85,12 @@ namespace TCP.Client.TCP
 
             clients.Add(client);
 
-            ShowMessage($"\n收到新客户端:{client.Client.RemoteEndPoint.ToString()}");
+            Invoke(myD_ShowMessage,$"\n收到新客户端:{client.Client.RemoteEndPoint.ToString()}");
             //开启线程用来持续收来自客户端的数据
-            Thread myThread = new Thread(() =>{
-                //new ParameterizedThreadStart(printReceiveMsg);
-                myDelegate<string> myD_ShowMessage = new myDelegate<string>(ShowMessage);
-                myDelegate<object> myD = new myDelegate<string>(printReceiveMsg);
-
+            Thread myThread = new Thread(() =>{
+                printReceiveMsg(client);
             });
-            myThread.Start(client);
+            myThread.Start();
 
             listener.BeginAcceptTcpClient(new AsyncCallback(DoAcceptTcpclient), listener);
         }
@@ -109,7 +102,7 @@ namespace TCP.Client.TCP
             TcpClient client = reciveClient as TcpClient;
             if (client == null)
             {
-                ShowMessage($"client error");
+                Invoke(myD_ShowMessage, $"client error");
                 return;
             }
             while (true)
@@ -122,7 +115,7 @@ namespace TCP.Client.TCP
                     {
                         string str = Encoding.UTF8.GetString(result, 0, num);//把字节数组中流存储的数据以字符串方式赋值给str
                         //在服务器显示收到的数据
-                        ShowMessage("From: " + client.Client.RemoteEndPoint.ToString() + " : " + str);
+                        Invoke(myD_ShowMessage, "From: " + client.Client.RemoteEndPoint.ToString() + " : " + str);
 
 
                         //服务器收到消息后并会给客户端一个消息。
@@ -134,14 +127,14 @@ namespace TCP.Client.TCP
                     }
                     else
                     {   //这里需要注意 当num=0时表明客户端已经断开连接，需要结束循环，不然会死循环一直卡住
-                        ShowMessage("客户端关闭");
+                        Invoke(myD_ShowMessage, $"客户端关闭");
                         break;
                     }
                 }
                 catch (Exception e)
                 {
                     clients.Remove(client);
-                    ShowMessage("error:" + e.ToString());
+                    Invoke(myD_ShowMessage, "error:" + e.ToString());
                     break;
                 }
 
