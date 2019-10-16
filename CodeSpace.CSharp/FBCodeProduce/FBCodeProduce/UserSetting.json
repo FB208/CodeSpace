@@ -4,13 +4,13 @@
       "ServerName": "BBSAdmin",
       "ServerType": "Microsoft SQL Server",
       "ConnectionString": "Data Source=.;Initial Catalog=BBSAdmin;Integrated Security=True;",
-      "IsUse": true
+      "IsUse": false
     },
     {
       "ServerName": "FbInCbhb",
       "ServerType": "Microsoft SQL Server",
       "ConnectionString": "Data Source=.;Initial Catalog=NewReport;Integrated Security=True;",
-      "IsUse": false
+      "IsUse": true
     },
     {
       "ServerName": "82",
