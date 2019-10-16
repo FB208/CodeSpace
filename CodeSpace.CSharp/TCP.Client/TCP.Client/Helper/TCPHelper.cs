@@ -15,11 +15,9 @@ namespace TCP.Client.Helper
             {
                 byte[] bytes = new byte[1024 * 100];
                 bytes = Encoding.UTF8.GetBytes(message);
-                using (NetworkStream stream = client.GetStream())
-                {
+                NetworkStream stream = client.GetStream();
                     stream.Write(bytes, 0, bytes.Length);
-                    stream.Flush();
-                }
+                stream.Flush();
                 errorMsg = "";
                 return true;
             }
