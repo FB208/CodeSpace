@@ -41,12 +41,13 @@
             this.btn_Close = new System.Windows.Forms.Button();
             this.btn_UDPSend = new System.Windows.Forms.Button();
             this.btn_CreateTcpService = new System.Windows.Forms.Button();
+            this.btn_CreateTcpConnection = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn_connect
             // 
             this.btn_connect.Location = new System.Drawing.Point(437, 14);
-            this.btn_connect.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_connect.Margin = new System.Windows.Forms.Padding(2);
             this.btn_connect.Name = "btn_connect";
             this.btn_connect.Size = new System.Drawing.Size(56, 20);
             this.btn_connect.TabIndex = 0;
@@ -57,7 +58,7 @@
             // btn_Send
             // 
             this.btn_Send.Location = new System.Drawing.Point(11, 391);
-            this.btn_Send.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_Send.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Send.Name = "btn_Send";
             this.btn_Send.Size = new System.Drawing.Size(56, 20);
             this.btn_Send.TabIndex = 1;
@@ -68,7 +69,7 @@
             // tb_SendData
             // 
             this.tb_SendData.Location = new System.Drawing.Point(11, 249);
-            this.tb_SendData.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_SendData.Margin = new System.Windows.Forms.Padding(2);
             this.tb_SendData.Multiline = true;
             this.tb_SendData.Name = "tb_SendData";
             this.tb_SendData.Size = new System.Drawing.Size(581, 138);
@@ -77,7 +78,7 @@
             // tb_Msg
             // 
             this.tb_Msg.Location = new System.Drawing.Point(11, 90);
-            this.tb_Msg.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_Msg.Margin = new System.Windows.Forms.Padding(2);
             this.tb_Msg.Multiline = true;
             this.tb_Msg.Name = "tb_Msg";
             this.tb_Msg.Size = new System.Drawing.Size(578, 126);
@@ -86,7 +87,7 @@
             // tb_IP
             // 
             this.tb_IP.Location = new System.Drawing.Point(39, 14);
-            this.tb_IP.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_IP.Margin = new System.Windows.Forms.Padding(2);
             this.tb_IP.Name = "tb_IP";
             this.tb_IP.Size = new System.Drawing.Size(138, 21);
             this.tb_IP.TabIndex = 4;
@@ -114,7 +115,7 @@
             // tb_port
             // 
             this.tb_port.Location = new System.Drawing.Point(263, 14);
-            this.tb_port.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_port.Margin = new System.Windows.Forms.Padding(2);
             this.tb_port.Name = "tb_port";
             this.tb_port.Size = new System.Drawing.Size(120, 21);
             this.tb_port.TabIndex = 7;
@@ -142,7 +143,7 @@
             // btn_Close
             // 
             this.btn_Close.Location = new System.Drawing.Point(510, 14);
-            this.btn_Close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_Close.Margin = new System.Windows.Forms.Padding(2);
             this.btn_Close.Name = "btn_Close";
             this.btn_Close.Size = new System.Drawing.Size(56, 20);
             this.btn_Close.TabIndex = 10;
@@ -153,7 +154,7 @@
             // btn_UDPSend
             // 
             this.btn_UDPSend.Location = new System.Drawing.Point(11, 39);
-            this.btn_UDPSend.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btn_UDPSend.Margin = new System.Windows.Forms.Padding(2);
             this.btn_UDPSend.Name = "btn_UDPSend";
             this.btn_UDPSend.Size = new System.Drawing.Size(56, 20);
             this.btn_UDPSend.TabIndex = 11;
@@ -172,11 +173,23 @@
             this.btn_CreateTcpService.UseVisualStyleBackColor = true;
             this.btn_CreateTcpService.Click += new System.EventHandler(this.Btn_CreateTcpService_Click);
             // 
+            // btn_CreateTcpConnection
+            // 
+            this.btn_CreateTcpConnection.Location = new System.Drawing.Point(207, 39);
+            this.btn_CreateTcpConnection.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_CreateTcpConnection.Name = "btn_CreateTcpConnection";
+            this.btn_CreateTcpConnection.Size = new System.Drawing.Size(110, 20);
+            this.btn_CreateTcpConnection.TabIndex = 13;
+            this.btn_CreateTcpConnection.Text = "创建TCP链接";
+            this.btn_CreateTcpConnection.UseVisualStyleBackColor = true;
+            this.btn_CreateTcpConnection.Click += new System.EventHandler(this.Btn_CreateTcpConnection_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 492);
+            this.Controls.Add(this.btn_CreateTcpConnection);
             this.Controls.Add(this.btn_CreateTcpService);
             this.Controls.Add(this.btn_UDPSend);
             this.Controls.Add(this.btn_Close);
@@ -190,7 +203,7 @@
             this.Controls.Add(this.tb_SendData);
             this.Controls.Add(this.btn_Send);
             this.Controls.Add(this.btn_connect);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "TcpClient";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -214,6 +227,7 @@
         private System.Windows.Forms.Button btn_Close;
         private System.Windows.Forms.Button btn_UDPSend;
         private System.Windows.Forms.Button btn_CreateTcpService;
+        private System.Windows.Forms.Button btn_CreateTcpConnection;
     }
 }
 

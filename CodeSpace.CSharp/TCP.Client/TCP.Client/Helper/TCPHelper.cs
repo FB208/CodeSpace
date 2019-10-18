@@ -9,7 +9,7 @@ namespace TCP.Client.Helper
 {
     public static class TCPHelper
     {
-        public static bool SendToClient(TcpClient client, string message,out string errorMsg)
+        public static bool SendToClient(this TcpClient client, string message,out string errorMsg)
         {
             try
             {
