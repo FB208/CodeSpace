@@ -105,5 +105,11 @@ namespace TCP.Client
             form.Show();
             
         }
+
+        private void Btn_CreateTcpConnection_Click(object sender, EventArgs e)
+        {
+            TCP.ConnectionView form = new TCP.ConnectionView();
+            form.Show();
+        }
     }
 }
