@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TCP.Client.EF;
 using TCP.Client.Helper;
 using TCP.Client.Models;
 using TCP.Client.Servers;
@@ -24,6 +25,7 @@ namespace TCP.Client.TCP
         delegate void myDelegate<T>(T t);
         myDelegate<string> myD_ShowMessage;
         private static byte[] bytes = new byte[1024 * 100];
+        GBEntities db = new GBEntities();
         public static List<TcpClientModel> clients = new List<TcpClientModel>();
         /// <summary>
         /// 用于存储客户端
@@ -182,6 +184,35 @@ namespace TCP.Client.TCP
                     //解析收到的数据
                     HaiKangYongChuanServer server = new HaiKangYongChuanServer();
                     HaiKangYongChuanModel reqModel = server.Analyze(str);
+                    //显示内容
+                    StringBuilder showStr = new StringBuilder();
+                    showStr.Append($"\r\n");
+                    showStr.Append($"流水号：{string.Join("",reqModel.LiuShui)}\r\n");
+                    showStr.Append($"协议版本号：{string.Join("", reqModel.XieYiBanBen)}\r\n");
+                    showStr.Append($"时间：{HaiKangYongChuanServer.CodeToTime(reqModel.ShiJian)}\r\n");
+                    showStr.Append($"源地址：{string.Join("", reqModel.YuanDiZhi)}\r\n");
+                    showStr.Append($"目的地址：{string.Join("", reqModel.MuDiDiZhi)}\r\n");
+                    string mingLingZiJie = reqModel.MingLingZiJie[0].Convert16To10();
+                    showStr.Append($"命令：{db.Keywords.FirstOrDefault(m=>m.KeyType== "控制单元命令"&&m.KeyCode== mingLingZiJie)?.KeyContent?? mingLingZiJie}\r\n");
+                    
+                    showStr.Append($"接收到{reqModel.Content_Object.Count}个信息对象\r\n");
+                    foreach (var item in reqModel.Content_Object)
+                    {
+                        showStr.Append($"---------------------\r\n");
+                        //showStr.Append($"信息类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "数据单元标识符_类型标志" && m.KeyCode == reqModel. )}\n");
+                        showStr.Append($"系统类型：{item.Content_Body.XiTongLeiXing}\r\n");
+                        showStr.Append($"系统地址：{item.Content_Body.XiTongDiZhi}\r\n");
+                        showStr.Append($"部件类型：{item.Content_Body.BuJianLeiXing}\r\n");
+                        showStr.Append($"部件地址：{item.Content_Body.BuJianDiZhi}\r\n");
+
+                        showStr.Append($"部件状态：{new HaiKangYongChuanServer().AnalyzeBuJianZhuangTai(item.Content_Body.BuJianZhuangTai)}\r\n");
+
+                        showStr.Append($"部件说明：{item.Content_Body.BuJianShuoMing}\r\n");
+                        showStr.Append($"时间标签：{item.ShiJianBiaoQian}\r\n");
+                        showStr.Append($"\r\n");
+                    }
+                    Invoke(myD_ShowMessage, showStr.ToString());
+
 
 
                     //FileStream fs = new FileStream(Application.StartupPath+@"//test.txt", FileMode.OpenOrCreate, FileAccess.Write);

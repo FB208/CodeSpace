@@ -8,6 +8,10 @@ namespace TCP.Client.Models
 {
     public class HaiKangYongChuanModel
     {
+        public HaiKangYongChuanModel() {
+            Content_Information = new Content_Information();
+            Content_Object = new List<Content_Object>();
+        }
         /// <summary>
         /// 起始字符 len：2
         /// </summary>
@@ -52,14 +56,43 @@ namespace TCP.Client.Models
         /// 结束符 len:2
         /// </summary>
         public string[] EndCode { get; set; }
-
-        public Body_BuJianStateModel bodyBuJianState { get; set; }
+        /// <summary>
+        /// 数据单元标识符
+        /// </summary>
+        public Content_Information Content_Information { get; set; }
+        /// <summary>
+        /// 信息对象
+        /// </summary>
+        public List<Content_Object> Content_Object { get; set; }
     }
-
+    /// <summary>
+    /// 数据单元标识符
+    /// </summary>
+    public class Content_Information {
+        /// <summary>
+        /// 类型标志
+        /// </summary>
+        public string LeiXingBiaoZhi { get; set; }
+        /// <summary>
+        /// 信息对象数目
+        /// </summary>
+        public int DuiXiangShuMu { get; set; }
+    }
+    public class Content_Object
+    {
+        /// <summary>
+        /// 信息对象数目
+        /// </summary>
+        public Content_Body Content_Body { get; set; }
+        /// <summary>
+        /// 时间标签
+        /// </summary>
+        public string ShiJianBiaoQian { get; set; }
+    }
     /// <summary>
     /// 建筑消防设施部件状态
     /// </summary>
-    public class Body_BuJianStateModel
+    public class Content_Body
     {
         /// <summary>
         /// 系统类型 len:1

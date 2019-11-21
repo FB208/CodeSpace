@@ -16,10 +16,11 @@ namespace TCP.Client.EF
     {
         public int ID { get; set; }
         public string KeyType { get; set; }
-        public string Keyword1 { get; set; }
+        public string KeyCode { get; set; }
         public string KeyContent { get; set; }
         public string KeyMemo { get; set; }
-        public Nullable<double> Sort { get; set; }
+        public string Sort { get; set; }
+        public string Memo0 { get; set; }
         public string Memo1 { get; set; }
         public string Memo2 { get; set; }
         public string Memo3 { get; set; }

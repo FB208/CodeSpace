@@ -25,23 +25,6 @@ namespace TCP.Client
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-
-
-
-            #region 二进制翻译
-            //string str_16 = "4040120001012e2110120b136653f0660c000000000000003000020201010112ff00ff00030001a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a000000000000000000000002511110119ea2323";
-            //List<int> str_10_list = new List<int>();
-            //for (int i = 0; i < str_16.Length; i=i+2)
-            //{
-            //    string one_str_16 = str_16.Substring(i, 2);
-            //    int one_int_16=int.Parse(one_str_16,
-            //    System.Globalization.NumberStyles.HexNumber);
-
-            //    str_10_list.Add(one_int_16);
-            //}
-            //new HaiKangYongChuanServer().Analyze(str_16);
-            #endregion
             if (string.IsNullOrWhiteSpace(tb_IP.Text))
             {
                 //tb_IP.Text = "127.0.0.1";

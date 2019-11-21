@@ -42,8 +42,13 @@ namespace TCP.Client.Servers
             
             string code = model.DataContent;
             List<string> codelist = code.ToArray().Select(m => m.ToString()).ToList<string>();
-            string 类型标识 = StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount));
-            switch (类型标识)
+            //类型标识
+            string LeiXingBiaoZhi = StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount));
+            //信息对象数目
+            int bodyCount = int.Parse(StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount)));
+            model.Content_Information.LeiXingBiaoZhi = LeiXingBiaoZhi;
+            model.Content_Information.DuiXiangShuMu = bodyCount;
+            switch (model.Content_Information.LeiXingBiaoZhi)
             {
                 case "1":
                     {
@@ -53,12 +58,12 @@ namespace TCP.Client.Servers
                 case "2":
                     {
                         //上传 建筑消防设施 部件 运行状态
-                        //信息对象数目
-                        int bodyCount = int.Parse(StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount)));
                         for (int i = 0; i < bodyCount; i++)
                         {
-                            model.bodyBuJianState=AnalyzeDataContent_2(codelist.TakeCode(40 * baseCount));
-                            string timeCode = codelist.TakeCode(6 * baseCount);
+                            Content_Object contentObject = new Content_Object();
+                            contentObject.Content_Body = AnalyzeDataContent_2(codelist.TakeCode(40 * baseCount));
+                            contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
+                            model.Content_Object.Add(contentObject);
                         }
                     } break;
                 case "21": {
@@ -66,33 +71,27 @@ namespace TCP.Client.Servers
                     } break;
                 case "24": {
                         //上传用户信息传输装置操作信息
-                        
-                        
                     } break;
                 case "25": {
                         //上传用户信息传输装置软件版本
-                    }
-                    break;
+                    } break;
                 case "90": {
                         //同步 用户 信息传输 装置时钟
                     } break;
-                case "91":
-                    {
+                case "91":{
                         //查岗命令
-                    }
-                    break;
-                default:
-                    break;
+                    } break;
+                default: break;
             }
         }
         /// <summary>
         /// //上传 建筑消防设施 部件 运行状态
         /// </summary>
         /// <param name="code">40位</param>
-        public Body_BuJianStateModel AnalyzeDataContent_2(string code)
+        public Content_Body AnalyzeDataContent_2(string code)
         {
             List<string> codelist = code.ToArray().Select(m => m.ToString()).ToList<string>();
-            Body_BuJianStateModel model = new Body_BuJianStateModel();
+            Content_Body model = new Content_Body();
             model.XiTongLeiXing = codelist.TakeCode(1 * baseCount);
             model.XiTongDiZhi = codelist.TakeCode(1 * baseCount);
             model.BuJianLeiXing = codelist.TakeCode(1 * baseCount);
@@ -103,24 +102,34 @@ namespace TCP.Client.Servers
             model.BuJianZhuangTai = zhuangt;
             model.BuJianShuoMing = codelist.TakeCode(31 * baseCount);
 
-            //byte[] stateBytes = StringHelper.IntToByteArray(int.Parse(model.BuJianZhuangTai));
-            //StringBuilder str = new StringBuilder();
-            //List<Keyword> keyword = db.Keywords.Where(m => m.KeyType == "建筑消防设施部件状态").ToList();
-            //for (int i = 0; i < stateBytes.Length; i++)
-            //{
-            //    if (stateBytes[i]==1)
-            //    {
-            //        str.Append($"{keyword.FirstOrDefault(m => m.Keyword1 == i + "").KeyContent}|");
-            //    }
-            //    else if (stateBytes[i] == 0)
-            //    {
-            //        str.Append($"{keyword.FirstOrDefault(m => m.Keyword1 == i + "").Memo1}|");
-            //    }
-            //}
+            
             return model;
         }
         /// <summary>
-        /// 直接返回16进制国标代码
+        /// 解析部件状态
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public string AnalyzeBuJianZhuangTai(string code)
+        {
+            byte[] stateBytes = StringHelper.IntToByteArray(int.Parse(code));
+            StringBuilder str = new StringBuilder();
+            List<Keyword> keyword = db.Keywords.Where(m => m.KeyType == "建筑消防设施部件状态").ToList();
+            for (int i = 0; i < stateBytes.Length; i++)
+            {
+                if (stateBytes[i] == 1)
+                {
+                    str.Append($"{keyword.FirstOrDefault(m => m.KeyCode == i + "")?.Memo1?? i.ToString()}|");
+                }
+                else if (stateBytes[i] == 0)
+                {
+                    str.Append($"{keyword.FirstOrDefault(m => m.KeyCode == i + "")?.Memo0?? i.ToString()}|");
+                }
+            }
+            return str.ToString();
+        }
+        /// <summary>
+        /// 将时间解析成16进制国标代码
         /// </summary>
         /// <param name="time"></param>
         /// <returns></returns>
@@ -134,7 +143,38 @@ namespace TCP.Client.Servers
                 result += int.Parse(temp).ToString("X").PadLeft(2, '0');
             }
             return result;
+        }
+        /// <summary>
+        /// 将国标时间代码转换成时间
+        /// </summary>
+        /// <param name="timeCode"></param>
+        /// <returns></returns>
+        public static string CodeToTime(string timeCode)
+        {
+            string result = "";
+            for (int i = 0; i < 6; i++)
+            {
+                string temp = timeCode.Substring(2 * i, 2);
+                
+                result= temp.Convert16To10()+result;
+            }
+            return result;
+        }
+        /// <summary>
+        /// 将国标时间代码转换成时间
+        /// </summary>
+        /// <param name="timeCode">1字节16进制</param>
+        /// <returns></returns>
+        public static string CodeToTime(string[] timeCodes)
+        {
+            string result = "";
+            for (int i = 0; i < 6; i++)
+            {
+                string temp = timeCodes[i];
 
+                result = temp.Convert16To10() + result;
+            }
+            return result;
         }
     }
 
