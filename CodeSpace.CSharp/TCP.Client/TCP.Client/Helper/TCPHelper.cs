@@ -14,9 +14,10 @@ namespace TCP.Client.Helper
             try
             {
                 byte[] bytes = new byte[1024 * 100];
-                bytes = Encoding.UTF8.GetBytes(message);
+                bytes = StringHelper.strToToHexByte(message);
+                //bytes = Encoding.UTF8.GetBytes(message);
                 NetworkStream stream = client.GetStream();
-                    stream.Write(bytes, 0, bytes.Length);
+                stream.Write(bytes, 0, bytes.Length);
                 stream.Flush();
                 errorMsg = "";
                 return true;

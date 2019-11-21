@@ -11,4 +11,16 @@
         @item.UserName
         <br/>
     }
+    <script>
+        $(function () {
+            $.ajax({
+                url: "http://localhost:8080/FAS/login!loginInfo.action?username=admin&password=11111111",
+                type: "GET",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                }
+            });
+        })
+        </script>
 </div>

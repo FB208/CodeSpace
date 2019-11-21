@@ -77,10 +77,9 @@ namespace TCP.Client.TCP
                 NetworkStream streamToServer = client.GetStream();
                 byte[] buffer = Encoding.UTF8.GetBytes(data);
 
-                streamToServer.Write(buffer, 0, buffer.Length); 
-                
-            
-                int num = streamToServer.Read(buffer, 0, buffer.Length);
+                streamToServer.Write(buffer, 0, buffer.Length);
+
+        int num = streamToServer.Read(buffer, 0, buffer.Length);
                 if (num == 0)
                 {
                     tb_Msg.AppendText("Client closed" + "\r\n");
@@ -93,6 +92,10 @@ namespace TCP.Client.TCP
                 }
 
             }
+        }
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
         }
     }
 }

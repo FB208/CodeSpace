@@ -44,12 +44,13 @@ namespace WebMvc
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             //用于直接读取数据库，不走框架(该注入仅用于测试)
-            services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseMySQL(Configuration.GetConnectionString("BBSAdmin_MySqlConnection")));
+            //services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseMySQL(Configuration.GetConnectionString("BBSAdmin_MySqlConnection")));
+            //services.AddDbContext<WebMvc.Model.BBSAdmin.BBSAdminContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BBSAdminConnection")));
             //services.AddSingleton<AutoInjectFactory>();
             //services.AddAutoMapper();
-            
+
             services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
 
             // Create the container builder.
             var builder = new ContainerBuilder();
@@ -72,7 +73,7 @@ namespace WebMvc
             builder.RegisterType<UserAdminVM>();
 
             //automapper
-            builder=builder.LoadAutoMapper();
+            builder = builder.LoadAutoMapper();
             //builder.RegisterType<AutoMapperInjection>().WithParameter("_builder",builder);
             builder.RegisterType<AutoMapperProfile>();
             //builder.RegisterType<AutoMapperProfile>().OnActivating(e=> {
@@ -131,10 +132,24 @@ namespace WebMvc
 
             app.UseMvc(routes =>
             {
+
+
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { action = "index", id = UrlParameter.Optional },
+                namespaces: new string[] { "WebMvc.Areas.WebApi.Controllers" }
+            ).DataTokens.Add("Area", "Web");
+
+
+                //                routes.MapAreaRoute("WebApi", "WebApi",
+                //                    "WebApi/{controller=Home}/{action=Index}/{id?}"
+                //);
+                //routes.MapRoute(
+                //    name: "default",
+                //    template: "{controller=Home}/{action=Index}/{id?}");
             });
+            
         }
     }
 }
