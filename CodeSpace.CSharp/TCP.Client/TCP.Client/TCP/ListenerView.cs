@@ -200,15 +200,20 @@ namespace TCP.Client.TCP
                     {
                         showStr.Append($"---------------------\r\n");
                         //showStr.Append($"信息类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "数据单元标识符_类型标志" && m.KeyCode == reqModel. )}\n");
-                        showStr.Append($"系统类型：{item.Content_Body.XiTongLeiXing}\r\n");
+                        string xiTongLeiXing = item.Content_Body.XiTongLeiXing.TrimStart('0');
+                        showStr.Append($"系统类型：{db.Keywords.FirstOrDefault(m=>m.KeyType== "系统类型"&&m.KeyCode== xiTongLeiXing)?.KeyContent?? item.Content_Body.XiTongLeiXing}\r\n");
                         showStr.Append($"系统地址：{item.Content_Body.XiTongDiZhi}\r\n");
-                        showStr.Append($"部件类型：{item.Content_Body.BuJianLeiXing}\r\n");
+                        string buJianLeiXing = item.Content_Body.BuJianLeiXing.TrimStart('0');
+                        showStr.Append($"部件类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "部件类型" && m.KeyCode == buJianLeiXing)?.KeyContent ?? item.Content_Body.BuJianLeiXing}\r\n");
                         showStr.Append($"部件地址：{item.Content_Body.BuJianDiZhi}\r\n");
-
                         showStr.Append($"部件状态：{new HaiKangYongChuanServer().AnalyzeBuJianZhuangTai(item.Content_Body.BuJianZhuangTai)}\r\n");
 
                         showStr.Append($"部件说明：{item.Content_Body.BuJianShuoMing}\r\n");
-                        showStr.Append($"时间标签：{item.ShiJianBiaoQian}\r\n");
+                        //说明解码
+                        //Encoding gb18030 = Encoding.GetEncoding("GB18030");
+                        //byte[] smbytes = StringHelper.strToToHexByte(item.Content_Body.BuJianShuoMing);
+                        //string smStr = gb18030.GetString(smbytes);
+                        showStr.Append($"时间标签：{HaiKangYongChuanServer.CodeToTime(item.ShiJianBiaoQian)}\r\n");
                         showStr.Append($"\r\n");
                     }
                     Invoke(myD_ShowMessage, showStr.ToString());
@@ -277,7 +282,21 @@ namespace TCP.Client.TCP
 
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="srcEncoding">原编码</param>
+        /// <param name="dstEncoding">目标编码</param>
+        /// <param name="srcBytes">原</param>
+        public static void OutputByEncoding(Encoding srcEncoding, Encoding dstEncoding, string srcStr)
+        {
+            byte[] srcBytes = srcEncoding.GetBytes(srcStr);
+            Console.WriteLine("Encoding.GetBytes: {0}", BitConverter.ToString(srcBytes));
+            byte[] bytes = Encoding.Convert(srcEncoding, dstEncoding, srcBytes);
+            Console.WriteLine("Encoding.GetBytes: {0}", BitConverter.ToString(bytes));
+            string result = dstEncoding.GetString(bytes);
+            Console.WriteLine("Encoding.GetString: {0}", result);
+        }
 
         public void ShowMessage(string text)
         {
