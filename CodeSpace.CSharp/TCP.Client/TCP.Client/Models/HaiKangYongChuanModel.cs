@@ -103,6 +103,10 @@ namespace TCP.Client.Models
         /// </summary>
         public string XiTongDiZhi { get; set; }
         /// <summary>
+        /// 系统状态 len:2
+        /// </summary>
+        public string XiTongZhuangTai { get; set; }
+        /// <summary>
         /// 部件类型 len:1
         /// </summary>
         public string BuJianLeiXing { get; set; }
@@ -119,5 +123,21 @@ namespace TCP.Client.Models
         /// 部件说明 len:31
         /// </summary>
         public string BuJianShuoMing { get; set; }
+        /// <summary>
+        /// 用户信息传输装置运行状态 len:1
+        /// </summary>
+        public string YongChuanYunXingZhuangTai { get; set; }
+        /// <summary>
+        /// 用户信息传输装置软件版本 len:2
+        /// </summary>
+        public string YongChuanRuanJianBanBen { get; set; }
+        /// <summary>
+        /// 操作信息
+        /// </summary>
+        public string CaoZuoXinXi { get; set; }
+        /// <summary>
+        /// 操作员编号
+        /// </summary>
+        public string CaoZuoYuanBianHao { get; set; }
     }
 }

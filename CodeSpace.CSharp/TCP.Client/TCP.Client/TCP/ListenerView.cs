@@ -194,16 +194,18 @@ namespace TCP.Client.TCP
                     showStr.Append($"目的地址：{string.Join("", reqModel.MuDiDiZhi)}\r\n");
                     string mingLingZiJie = reqModel.MingLingZiJie[0].Convert16To10();
                     showStr.Append($"命令：{db.Keywords.FirstOrDefault(m=>m.KeyType== "控制单元命令"&&m.KeyCode== mingLingZiJie)?.KeyContent?? mingLingZiJie}\r\n");
-                    
+                    showStr.Append($"数据单元类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "数据单元标识符_类型标志" && m.KeyCode == reqModel.Content_Information.LeiXingBiaoZhi)?.KeyContent ?? reqModel.Content_Information.LeiXingBiaoZhi}\r\n");
                     showStr.Append($"接收到{reqModel.Content_Object.Count}个信息对象\r\n");
                     foreach (var item in reqModel.Content_Object)
                     {
+                        //上传 建筑消防设施 部件 运行状态
                         showStr.Append($"---------------------\r\n");
                         //showStr.Append($"信息类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "数据单元标识符_类型标志" && m.KeyCode == reqModel. )}\n");
-                        string xiTongLeiXing = item.Content_Body.XiTongLeiXing.TrimStart('0');
-                        showStr.Append($"系统类型：{db.Keywords.FirstOrDefault(m=>m.KeyType== "系统类型"&&m.KeyCode== xiTongLeiXing)?.KeyContent?? item.Content_Body.XiTongLeiXing}\r\n");
+                        string xiTongLeiXing = item.Content_Body.XiTongLeiXing?.TrimStart('0');
+                        showStr.Append($"系统类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "系统类型" && m.KeyCode == xiTongLeiXing)?.KeyContent ?? item.Content_Body.XiTongLeiXing}\r\n");
                         showStr.Append($"系统地址：{item.Content_Body.XiTongDiZhi}\r\n");
-                        string buJianLeiXing = item.Content_Body.BuJianLeiXing.TrimStart('0');
+                        showStr.Append($"系统状态：{new HaiKangYongChuanServer().AnalyzeBitCode(item.Content_Body.XiTongZhuangTai, "建筑消防设施系统状态")}\r\n");
+                        string buJianLeiXing = item.Content_Body.BuJianLeiXing?.TrimStart('0');
                         showStr.Append($"部件类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "部件类型" && m.KeyCode == buJianLeiXing)?.KeyContent ?? item.Content_Body.BuJianLeiXing}\r\n");
                         showStr.Append($"部件地址：{item.Content_Body.BuJianDiZhi}\r\n");
                         showStr.Append($"部件状态：{new HaiKangYongChuanServer().AnalyzeBuJianZhuangTai(item.Content_Body.BuJianZhuangTai)}\r\n");
@@ -213,8 +215,16 @@ namespace TCP.Client.TCP
                         //Encoding gb18030 = Encoding.GetEncoding("GB18030");
                         //byte[] smbytes = StringHelper.strToToHexByte(item.Content_Body.BuJianShuoMing);
                         //string smStr = gb18030.GetString(smbytes);
+
+                        //上传用户信息传输装置 运行状态
+                        showStr.Append($"用户信息传输装置运行状态：{new HaiKangYongChuanServer().AnalyzeBitCode(item.Content_Body.YongChuanYunXingZhuangTai, "用户信息传输装置运行状态")}\r\n");
+                        //上传用户信息传输装置软件版本
+                        showStr.Append($"用户信息传输装置软件版本：{item.Content_Body.YongChuanRuanJianBanBen}\r\n");
+                        showStr.Append($"操作信息：{new HaiKangYongChuanServer().AnalyzeBitCode(item.Content_Body.CaoZuoXinXi, "用户信息传输装置操作标志")}\r\n");
+                        showStr.Append($"操作员编号：{item.Content_Body.CaoZuoYuanBianHao}\r\n");
                         showStr.Append($"时间标签：{HaiKangYongChuanServer.CodeToTime(item.ShiJianBiaoQian)}\r\n");
                         showStr.Append($"\r\n");
+                        
                     }
                     Invoke(myD_ShowMessage, showStr.ToString());
 
