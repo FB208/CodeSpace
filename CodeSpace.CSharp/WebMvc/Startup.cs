@@ -132,24 +132,19 @@ namespace WebMvc
 
             app.UseMvc(routes =>
             {
-
-
                 routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { action = "index", id = UrlParameter.Optional },
-                namespaces: new string[] { "WebMvc.Areas.WebApi.Controllers" }
-            ).DataTokens.Add("Area", "Web");
+                    name: "WebApi",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                    
+                    );
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                    );
 
 
-                //                routes.MapAreaRoute("WebApi", "WebApi",
-                //                    "WebApi/{controller=Home}/{action=Index}/{id?}"
-                //);
-                //routes.MapRoute(
-                //    name: "default",
-                //    template: "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
         }
     }
 }

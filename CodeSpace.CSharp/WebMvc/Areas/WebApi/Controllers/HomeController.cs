@@ -3,14 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebMvc.Areas.WebApi.Base;
 
 namespace WebMvc.Areas.WebApi.Controllers
 {
-    public class HomeController : Controller
+    [Area("WebApi")]
+    public class HomeController : BaseController
     {
-        public IActionResult Index()
+        public class Test {
+            public string name { get; set; }
+            public int age { get; set; }
+        }
+        public JsonResult Index()
         {
-            return View();
+            Test test = new Test()
+            {
+                name="test",
+                age=26
+            };
+            return Json(new Result
+            {
+                success = true,
+                Data = test
+            });
         }
     }
 }
