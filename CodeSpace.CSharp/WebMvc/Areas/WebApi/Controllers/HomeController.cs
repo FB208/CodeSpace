@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebMvc.Areas.WebApi.Base;
+using WebMvc.Filter;
 
 namespace WebMvc.Areas.WebApi.Controllers
 {
@@ -14,6 +15,7 @@ namespace WebMvc.Areas.WebApi.Controllers
             public string name { get; set; }
             public int age { get; set; }
         }
+        [NoPermissionRequired]
         public JsonResult Index()
         {
             Test test = new Test()

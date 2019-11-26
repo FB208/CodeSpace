@@ -26,7 +26,7 @@ namespace Common.Standard
             var extension = file.Extension;//文件后缀名
         }
         /// <summary>
-        /// 创建文件
+        /// 创建文件 失败抛出异常
         /// </summary>
         /// <param name="filePath"></param>
         public static void NewFile(string filePath)
@@ -39,6 +39,42 @@ namespace Common.Standard
             }
 
             System.IO.File.Create(newfilepath);//创建
+        }
+        /// <summary>
+        /// 创建或打开文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static FileStream CreateOpen(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Create(filePath);//创建
+            }
+            FileStream fs = File.OpenWrite(filePath);
+            return fs;
+        }
+        /// <summary>
+        /// 创建或打开文件
+        /// </summary>
+        /// <param name="filePath"></param>
+        public static void Create(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Create(filePath);//创建
+            }
+        }
+        /// <summary>
+        /// 将字符串写入文件
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <param name="content">字符串</param>
+        public static void OpenWrite(string filePath,string content)
+        {
+            using (StreamWriter sw = new StreamWriter(filePath,true))
+            {
+                sw.WriteLine(content);
+            }
         }
         /// <summary>
         /// 复制文件，带重命名

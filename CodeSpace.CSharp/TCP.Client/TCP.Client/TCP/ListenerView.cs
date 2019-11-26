@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Standard;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,6 +27,7 @@ namespace TCP.Client.TCP
         myDelegate<string> myD_ShowMessage;
         private static byte[] bytes = new byte[1024 * 100];
         GBEntities db = new GBEntities();
+        TcpListener listener;
         public static List<TcpClientModel> clients = new List<TcpClientModel>();
         /// <summary>
         /// 用于存储客户端
@@ -51,12 +53,28 @@ namespace TCP.Client.TCP
             _port = port;
             myD_ShowMessage = new myDelegate<string>(ShowMessage);
             InitializeComponent();
-            Init();
+
         }
         #region 控件方法
+        /// <summary>
+        /// 窗口关闭
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListenerView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //释放已连接的客户端
+            foreach (var client in clients)
+            {
+                client.TcpClient.Close();
+                client.TcpClient.Dispose();
+            }
+            //关闭服务端
+            listener.Stop();
+        }
         private void ListenerView_Load(object sender, EventArgs e)
         {
-
+            Init();
         }
         /// <summary>
         /// 刷新“已连接客户端”下拉框
@@ -103,32 +121,13 @@ namespace TCP.Client.TCP
             {
                 IPAddress ip = IPAddress.Parse(_ip);
                 int port = _port;
-                TcpListener listener = new TcpListener(ip, port);
+                listener = new TcpListener(ip, port);
 
                 tb_console.AppendText($"IP:{_ip}\r\n");
                 tb_console.AppendText($"PORT:{_port}\r\n");
                 listener.Start();
                 tb_console.AppendText($"Listener...\r\n");
-                #region 单客户端监听
-                /*
-                TaskFactory tasks = new TaskFactory();
-                TcpClient client = null;
-                string ipaddress = string.Empty;
-                //开始监听
-                Thread thread = new Thread(() =>
-                {
-                    myDelegate<string> myD = new myDelegate<string>(ShowMessage);
-
-                    while (true)
-                    {
-                        client = listener.AcceptTcpClient();
-                        tasks.StartNew(() => HandleClient(client, ipaddress, myD)).Wait();
-                    }
-                });
-                thread.IsBackground = true;
-                thread.Start();
-                */
-                #endregion
+                
                 //异步接收 递归循环接收多个客户端
                 listener.BeginAcceptTcpClient(new AsyncCallback(GetAcceptTcpclient), listener);
 
@@ -141,21 +140,29 @@ namespace TCP.Client.TCP
         }
         private void GetAcceptTcpclient(IAsyncResult State)
         {
-            //处理多个客户端接入
-            TcpListener listener = (TcpListener)State.AsyncState;
-            //接收到客户端请求
-            TcpClient client = listener.EndAcceptTcpClient(State);
-            //保存到客户端集合中
-            clients.Add(new TcpClientModel() { TcpClient = client, RemoteEndPoint = client.Client.RemoteEndPoint.ToString() });
-
-            Invoke(myD_ShowMessage, $"\nGet a new client:{client.Client.RemoteEndPoint.ToString()}");
-            //开启线程用来持续接收来自客户端的数据
-            Thread myThread = new Thread(() =>
+            try
             {
-                ReceiveMsgFromClient(client);
-            });
-            myThread.Start();
-            listener.BeginAcceptTcpClient(new AsyncCallback(GetAcceptTcpclient), listener);
+                //处理多个客户端接入
+                TcpListener listener = (TcpListener)State.AsyncState;
+                //接收到客户端请求
+                TcpClient client = listener.EndAcceptTcpClient(State);
+                //保存到客户端集合中
+                clients.Add(new TcpClientModel() { TcpClient = client, RemoteEndPoint = client.Client.RemoteEndPoint.ToString() });
+
+                Invoke(myD_ShowMessage, $"\nGet a new client:{client.Client.RemoteEndPoint.ToString()}");
+                //开启线程用来持续接收来自客户端的数据
+                Thread myThread = new Thread(() =>
+                {
+                    ReceiveMsgFromClient(client);
+                });
+                myThread.Start();
+                listener.BeginAcceptTcpClient(new AsyncCallback(GetAcceptTcpclient), listener);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
         }
         /// <summary>
         /// 响应接收的消息
@@ -177,7 +184,10 @@ namespace TCP.Client.TCP
                 int num = stream.Read(bytes, 0, bytes.Length); //将数据读到result中，并返回字符长度                  
                 if (num != 0)
                 {
+                    
                     string str = StringHelper.byteToHexStr(bytes, num);
+
+                    FileHelper.OpenWrite($@"{Application.StartupPath}//log//{DateTime.Now.ToString("yyyyMMddHH")}.txt",$@"收到报文{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}：{str}");
                     //string str = Encoding.UTF8.GetString(bytes, 0, num);//把字节数组中流存储的数据以字符串方式赋值给str
                     //在服务器显示收到的数据
                     Invoke(myD_ShowMessage, "From: " + client.Client.RemoteEndPoint.ToString() + " : " + str);
@@ -194,6 +204,7 @@ namespace TCP.Client.TCP
                     showStr.Append($"目的地址：{string.Join("", reqModel.MuDiDiZhi)}\r\n");
                     string mingLingZiJie = reqModel.MingLingZiJie[0].Convert16To10();
                     showStr.Append($"命令：{db.Keywords.FirstOrDefault(m=>m.KeyType== "控制单元命令"&&m.KeyCode== mingLingZiJie)?.KeyContent?? mingLingZiJie}\r\n");
+                    //要处理命令为3的情况
                     showStr.Append($"数据单元类型：{db.Keywords.FirstOrDefault(m => m.KeyType == "数据单元标识符_类型标志" && m.KeyCode == reqModel.Content_Information.LeiXingBiaoZhi)?.KeyContent ?? reqModel.Content_Information.LeiXingBiaoZhi}\r\n");
                     showStr.Append($"接收到{reqModel.Content_Object.Count}个信息对象\r\n");
                     foreach (var item in reqModel.Content_Object)
@@ -229,12 +240,13 @@ namespace TCP.Client.TCP
                     Invoke(myD_ShowMessage, showStr.ToString());
 
 
+                    if (mingLingZiJie==((int)Enums.KongZhiDanYuanEnum.确认).ToString())
+                    {
+                        continue;
+                    }
 
-                    //FileStream fs = new FileStream(Application.StartupPath+@"//test.txt", FileMode.OpenOrCreate, FileAccess.Write);
-                    //fs.Write(bytes, 0, bytes.Length);
-                    //fs.Close();
-                    //服务器收到消息后并会给客户端一个消息。
-                    //string msg = "Your message has been received by the server[" + str + "]";
+                    
+                    #region 答复
                     StringBuilder returnStr = new StringBuilder();
                     returnStr.Append(reqModel.StartCode[0]);
                     returnStr.Append(reqModel.StartCode[1]);
@@ -242,21 +254,33 @@ namespace TCP.Client.TCP
                     returnStr.Append(reqModel.LiuShui[1]);
                     returnStr.Append(reqModel.XieYiBanBen[0]);
                     returnStr.Append(reqModel.XieYiBanBen[1]);
-                    returnStr.Append(HaiKangYongChuanServer.TimeToCode(DateTime.Now));
-                    returnStr.Append(reqModel.MuDiDiZhi[0]);//回发时把原地址和目的地址调转
-                    returnStr.Append(reqModel.MuDiDiZhi[1]);
-                    returnStr.Append(reqModel.MuDiDiZhi[2]);
-                    returnStr.Append(reqModel.MuDiDiZhi[3]);
-                    returnStr.Append(reqModel.MuDiDiZhi[4]);
-                    returnStr.Append(reqModel.MuDiDiZhi[5]);
+                    returnStr.Append(HaiKangYongChuanServer.TimeToCode(DateTime.Now));////new DateTime(2019,1,1,1,1,1)
                     returnStr.Append(reqModel.YuanDiZhi[0]);//回发时把原地址和目的地址调转
                     returnStr.Append(reqModel.YuanDiZhi[1]);
                     returnStr.Append(reqModel.YuanDiZhi[2]);
                     returnStr.Append(reqModel.YuanDiZhi[3]);
                     returnStr.Append(reqModel.YuanDiZhi[4]);
                     returnStr.Append(reqModel.YuanDiZhi[5]);
-                    returnStr.Append("0000");//应用数据单元长度为0
-                    returnStr.Append("03");//命令字节：确认
+                    returnStr.Append(reqModel.MuDiDiZhi[0]);//回发时把原地址和目的地址调转
+                    returnStr.Append(reqModel.MuDiDiZhi[1]);
+                    returnStr.Append(reqModel.MuDiDiZhi[2]);
+                    returnStr.Append(reqModel.MuDiDiZhi[3]);
+                    returnStr.Append(reqModel.MuDiDiZhi[4]);
+                    returnStr.Append(reqModel.MuDiDiZhi[5]);
+                    
+                    string data = "";
+                    string dataLength = "0000";
+                    string mingLing = "03";
+                    if (reqModel.Content_Information.LeiXingBiaoZhi == ((int)Enums.ShuJuDanYuanLeiXing.上传用户信息传输装置系统时间).ToString())
+                    {
+                        data = "90".Convert10To16() + "01".Convert10To16() + HaiKangYongChuanServer.TimeToCode(new DateTime(2022, 1, 1, 1, 1, 1));
+                        dataLength = "00080000";
+                        mingLing = "01";
+                    }
+
+                    returnStr.Append(dataLength);//应用数据单元长度为0
+                    returnStr.Append(mingLing);//命令字节：确认
+                    returnStr.Append(data);
                     //crc校验
                     int checksum = 0;
                     string checkStr = returnStr.ToString().Substring(4, returnStr.ToString().Length - 4);
@@ -270,14 +294,18 @@ namespace TCP.Client.TCP
                     returnStr.Append(reqModel.EndCode[0]);
                     returnStr.Append(reqModel.EndCode[1]);
                     string msg = returnStr.ToString();
+                    FileHelper.OpenWrite($@"{Application.StartupPath}//log//{DateTime.Now.ToString("yyyyMMddHH")}.txt", $@"答复报文{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}：{returnStr}");
+                    Invoke(myD_ShowMessage, "Return message success: " + msg);
                     bool result = TCPHelper.SendToClient(client, msg, out msg);
                     if (!result)
                     {
                         Invoke(myD_ShowMessage, "Return message faild: " + msg);
                     }
+                    #endregion
                 }
                 else
-                {   //这里需要注意 当num=0时表明客户端已经断开连接，需要结束循环，不然会死循环一直卡住
+                {   
+                    //这里需要注意 当num=0时表明客户端已经断开连接，需要结束循环，不然会死循环一直卡住
                     Invoke(myD_ShowMessage, $"Client closed");
                     break;
                 }
@@ -289,7 +317,6 @@ namespace TCP.Client.TCP
                 //    Invoke(myD_ShowMessage, "error:" + e.ToString());
                 //    break;
                 //}
-
             }
         }
         /// <summary>

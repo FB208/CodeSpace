@@ -17,9 +17,9 @@ namespace TCP.Client.Servers
         int baseCount = 2;
         public HaiKangYongChuanModel Analyze(string codeStr)
         {
-            List<string> codelist =codeStr.ToArray().Select(m=>m.ToString()).ToList<string>();
+            List<string> codelist = codeStr.ToArray().Select(m => m.ToString()).ToList<string>();
             HaiKangYongChuanModel model = new HaiKangYongChuanModel();
-            model.StartCode = new string[] { codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount)};
+            model.StartCode = new string[] { codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount) };
             model.LiuShui = new string[] { codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount) };
             model.XieYiBanBen = new string[] { codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount) };
             model.ShiJian = new string[] { codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount) };
@@ -29,7 +29,7 @@ namespace TCP.Client.Servers
             string heigh = codelist.TakeCode(1 * baseCount);
             model.DataLength = int.Parse(StringHelper.Convert16To10(heigh + low));// 
             model.MingLingZiJie = new string[] { codelist.TakeCode(1 * baseCount) };
-            model.DataContent = codelist.TakeCode(model.DataLength*baseCount);
+            model.DataContent = codelist.TakeCode(model.DataLength * baseCount);
             model.CRC_16 = new string[] { codelist.TakeCode(1 * baseCount) };
             model.EndCode = new string[] { codelist.TakeCode(1 * baseCount), codelist.TakeCode(1 * baseCount) };
 
@@ -39,77 +39,92 @@ namespace TCP.Client.Servers
 
         public void AnalyzeDataContent(HaiKangYongChuanModel model)
         {
-            
+
             string code = model.DataContent;
-            List<string> codelist = code.ToArray().Select(m => m.ToString()).ToList<string>();
-            //类型标识
-            string LeiXingBiaoZhi = StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount));
-            //信息对象数目
-            int bodyCount = int.Parse(StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount)));
-            model.Content_Information.LeiXingBiaoZhi = LeiXingBiaoZhi;
-            model.Content_Information.DuiXiangShuMu = bodyCount;
-            switch (model.Content_Information.LeiXingBiaoZhi)
+            if (code.Length > 0)
             {
-                case "1":
-                    {
-                        //上传建筑消防设施系统状态 
-                        for (int i = 0; i < bodyCount; i++)
+                List<string> codelist = code.ToArray().Select(m => m.ToString()).ToList<string>();
+                //类型标识
+                string LeiXingBiaoZhi = StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount));
+                //信息对象数目
+                int bodyCount = int.Parse(StringHelper.Convert16To10(codelist.TakeCode(1 * baseCount)));
+                model.Content_Information.LeiXingBiaoZhi = LeiXingBiaoZhi;
+                model.Content_Information.DuiXiangShuMu = bodyCount;
+                switch (model.Content_Information.LeiXingBiaoZhi)
+                {
+                    case "1":
                         {
-                            Content_Object contentObject = new Content_Object();
-                            contentObject.Content_Body = AnalyzeDataContent_1(codelist.TakeCode(4 * baseCount));
-                            contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
-                            model.Content_Object.Add(contentObject);
+                            //上传建筑消防设施系统状态 
+                            for (int i = 0; i < bodyCount; i++)
+                            {
+                                Content_Object contentObject = new Content_Object();
+                                contentObject.Content_Body = AnalyzeDataContent_1(codelist.TakeCode(4 * baseCount));
+                                contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
+                                model.Content_Object.Add(contentObject);
+                            }
                         }
-                    }
-                    break;
-                case "2":
-                    {
-                        //上传 建筑消防设施 部件 运行状态
-                        for (int i = 0; i < bodyCount; i++)
+                        break;
+                    case "2":
                         {
-                            Content_Object contentObject = new Content_Object();
-                            contentObject.Content_Body = AnalyzeDataContent_2(codelist.TakeCode(40 * baseCount));
-                            contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
-                            model.Content_Object.Add(contentObject);
+                            //上传 建筑消防设施 部件 运行状态
+                            for (int i = 0; i < bodyCount; i++)
+                            {
+                                Content_Object contentObject = new Content_Object();
+                                contentObject.Content_Body = AnalyzeDataContent_2(codelist.TakeCode(40 * baseCount));
+                                contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
+                                model.Content_Object.Add(contentObject);
+                            }
                         }
-                    } break;
-                case "21": {
-                        //上传用户信息传输装置 运行状态
-                        for (int i = 0; i < bodyCount; i++)
+                        break;
+                    case "21":
                         {
-                            Content_Object contentObject = new Content_Object();
-                            contentObject.Content_Body = AnalyzeDataContent_21(codelist.TakeCode(1 * baseCount));
-                            contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
-                            model.Content_Object.Add(contentObject);
+                            //上传用户信息传输装置 运行状态
+                            for (int i = 0; i < bodyCount; i++)
+                            {
+                                Content_Object contentObject = new Content_Object();
+                                contentObject.Content_Body = AnalyzeDataContent_21(codelist.TakeCode(1 * baseCount));
+                                contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
+                                model.Content_Object.Add(contentObject);
+                            }
                         }
-                    } break;
-                case "24": {
-                        //上传用户信息传输装置操作信息
-                        for (int i = 0; i < bodyCount; i++)
+                        break;
+                    case "24":
                         {
-                            Content_Object contentObject = new Content_Object();
-                            contentObject.Content_Body = AnalyzeDataContent_24(codelist.TakeCode(2 * baseCount));
-                            contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
-                            model.Content_Object.Add(contentObject);
+                            //上传用户信息传输装置操作信息
+                            for (int i = 0; i < bodyCount; i++)
+                            {
+                                Content_Object contentObject = new Content_Object();
+                                contentObject.Content_Body = AnalyzeDataContent_24(codelist.TakeCode(2 * baseCount));
+                                contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
+                                model.Content_Object.Add(contentObject);
+                            }
                         }
-                    } break;
-                case "25": {
-                        //上传用户信息传输装置软件版本
-                        for (int i = 0; i < bodyCount; i++)
+                        break;
+                    case "25":
                         {
-                            Content_Object contentObject = new Content_Object();
-                            contentObject.Content_Body = AnalyzeDataContent_25(codelist.TakeCode(2 * baseCount));
-                            //contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
-                            model.Content_Object.Add(contentObject);
+                            //上传用户信息传输装置软件版本
+                            for (int i = 0; i < bodyCount; i++)
+                            {
+                                Content_Object contentObject = new Content_Object();
+                                contentObject.Content_Body = AnalyzeDataContent_25(codelist.TakeCode(2 * baseCount));
+                                //contentObject.ShiJianBiaoQian = codelist.TakeCode(6 * baseCount);
+                                model.Content_Object.Add(contentObject);
+                            }
                         }
-                    } break;
-                case "90": {
-                        //同步 用户 信息传输 装置时钟
-                    } break;
-                case "91":{
-                        //查岗命令
-                    } break;
-                default: break;
+                        break;
+                    case "90":
+                        {
+                            //同步 用户 信息传输 装置时钟
+                        }
+                        break;
+                    case "91":
+                        {
+                            //查岗命令
+                        }
+                        break;
+                    default: break;
+
+                }
             }
         }
         /// <summary>
@@ -137,14 +152,14 @@ namespace TCP.Client.Servers
             model.XiTongLeiXing = codelist.TakeCode(1 * baseCount);
             model.XiTongDiZhi = codelist.TakeCode(1 * baseCount);
             model.BuJianLeiXing = codelist.TakeCode(1 * baseCount);
-            
-            string dizhi= codelist.TakeCodeDesc(4 * baseCount);
+
+            string dizhi = codelist.TakeCodeDesc(4 * baseCount);
             string zhuangt = codelist.TakeCodeDesc(2 * baseCount);
             model.BuJianDiZhi = dizhi;
             model.BuJianZhuangTai = zhuangt;
             model.BuJianShuoMing = codelist.TakeCode(31 * baseCount);
 
-            
+
             return model;
         }
         /// <summary>
@@ -166,7 +181,7 @@ namespace TCP.Client.Servers
             Content_Body model = new Content_Body();
             List<string> codelist = code.ToArray().Select(m => m.ToString()).ToList<string>();
             model.CaoZuoXinXi = codelist.TakeCodeDesc(1 * baseCount);
-            model.CaoZuoYuanBianHao= codelist.TakeCodeDesc(1 * baseCount);
+            model.CaoZuoYuanBianHao = codelist.TakeCodeDesc(1 * baseCount);
             return model;
         }
         /// <summary>
@@ -197,16 +212,16 @@ namespace TCP.Client.Servers
             {
                 if (stateBytes[i] == 1)
                 {
-                    str.Append($"{keyword.FirstOrDefault(m => m.KeyCode == i + "")?.Memo1?? i.ToString()}|");
+                    str.Append($"{keyword.FirstOrDefault(m => m.KeyCode == i + "")?.Memo1 ?? i.ToString()}|");
                 }
                 else if (stateBytes[i] == 0)
                 {
-                    str.Append($"{keyword.FirstOrDefault(m => m.KeyCode == i + "")?.Memo0?? i.ToString()}|");
+                    str.Append($"{keyword.FirstOrDefault(m => m.KeyCode == i + "")?.Memo0 ?? i.ToString()}|");
                 }
             }
             return str.ToString();
         }
-        public string AnalyzeBitCode(string code,string keyType)
+        public string AnalyzeBitCode(string code, string keyType)
         {
             if (string.IsNullOrWhiteSpace(code))
             {
@@ -235,7 +250,7 @@ namespace TCP.Client.Servers
         /// <returns></returns>
         public static string TimeToCode(DateTime? time)
         {
-            if (time==null)
+            if (time == null)
             {
                 return "";
             }
@@ -263,8 +278,8 @@ namespace TCP.Client.Servers
             for (int i = 0; i < 6; i++)
             {
                 string temp = timeCode.Substring(2 * i, 2);
-                
-                result= temp.Convert16To10()+result;
+
+                result = temp.Convert16To10() + result;
             }
             return result;
         }
@@ -275,7 +290,7 @@ namespace TCP.Client.Servers
         /// <returns></returns>
         public static string CodeToTime(string[] timeCodes)
         {
-            if (timeCodes.Length==0)
+            if (timeCodes.Length == 0)
             {
                 return "";
             }

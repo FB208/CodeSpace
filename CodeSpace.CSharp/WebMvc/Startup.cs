@@ -22,6 +22,7 @@ using System.Reflection;
 using Common.Standard.AutoMapper9;
 using WebMvc.DemoClass.AutoMapperDemo;
 using WebMvc.Components;
+using WebMvc.Filter;
 
 namespace WebMvc
 {
@@ -49,7 +50,9 @@ namespace WebMvc
             //services.AddSingleton<AutoInjectFactory>();
             //services.AddAutoMapper();
 
-            services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options=> {
+                options.Filters.Add(new PermissionRequiredAttribute());
+            }).AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
             // Create the container builder.
