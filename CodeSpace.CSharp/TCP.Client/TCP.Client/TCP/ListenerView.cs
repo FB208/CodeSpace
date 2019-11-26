@@ -29,6 +29,7 @@ namespace TCP.Client.TCP
         GBEntities db = new GBEntities();
         TcpListener listener;
         public static List<TcpClientModel> clients = new List<TcpClientModel>();
+        bool threadLive = true;
         /// <summary>
         /// 用于存储客户端
         /// </summary>
@@ -57,24 +58,49 @@ namespace TCP.Client.TCP
         }
         #region 控件方法
         /// <summary>
+        /// 启动/停止监听
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_switch_Click(object sender, EventArgs e)
+        {
+            Init();
+        }
+        /// <summary>
         /// 窗口关闭
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ListenerView_FormClosing(object sender, FormClosingEventArgs e)
         {
+            //关键代码
+            this.WindowState = FormWindowState.Normal;
+
+            //设置FormWindowState.Normal，系统自动将所有子窗体设置为FormWindowState.Normal状态，需要下面的代码进行还原
+            //如果当前只有3个窗体（主工作台，当前正在关闭的窗体，另外一个窗体)，则另外一个窗体最大化
+            Form mainForm = new Form1();
+            mainForm.WindowState = FormWindowState.Maximized;
+            //foreach (Form frm in mdiForm.MdiParent.MdiChildren)
+            //{
+            //    if (frm.Equals(this) == false)
+            //    {
+            //        frm.WindowState = FormWindowState.Maximized;
+            //    }
+            //}
             //释放已连接的客户端
             foreach (var client in clients)
             {
-                client.TcpClient.Close();
-                client.TcpClient.Dispose();
+                client.TcpClient?.Close();
+                client.TcpClient?.Dispose();
             }
             //关闭服务端
-            listener.Stop();
+            listener?.Stop();
+            threadLive = false;
+            clients.Clear();
         }
         private void ListenerView_Load(object sender, EventArgs e)
         {
-            Init();
+            
         }
         /// <summary>
         /// 刷新“已连接客户端”下拉框
@@ -156,6 +182,10 @@ namespace TCP.Client.TCP
                     ReceiveMsgFromClient(client);
                 });
                 myThread.Start();
+                if (!threadLive)
+                {
+                    myThread.Abort();
+                }
                 listener.BeginAcceptTcpClient(new AsyncCallback(GetAcceptTcpclient), listener);
             }
             catch (Exception ex)
@@ -178,9 +208,9 @@ namespace TCP.Client.TCP
             }
             while (true)
             {
-                //try
-                //{
-                NetworkStream stream = client.GetStream();
+                try
+                {
+                    NetworkStream stream = client.GetStream();
                 int num = stream.Read(bytes, 0, bytes.Length); //将数据读到result中，并返回字符长度                  
                 if (num != 0)
                 {
@@ -309,14 +339,19 @@ namespace TCP.Client.TCP
                     Invoke(myD_ShowMessage, $"Client closed");
                     break;
                 }
-                //}
-                //catch (Exception e)
-                //{
-                //    //链接失败 从集合中移除出错客户端
-                //    clients.Remove(clients.FirstOrDefault(m => m.RemoteEndPoint == client.Client.RemoteEndPoint.ToString()));
-                //    Invoke(myD_ShowMessage, "error:" + e.ToString());
-                //    break;
-                //}
+                }
+                catch (Exception e)
+                {
+                    //链接失败 从集合中移除出错客户端
+                    if (client?.Client.Connected==true)
+                    {
+                        clients.Remove(clients.FirstOrDefault(m => m.RemoteEndPoint == client?.Client?.RemoteEndPoint?.ToString()));
+                        Invoke(myD_ShowMessage, "error:" + e.ToString());
+                    }
+                    
+                    
+                    break;
+                }
             }
         }
         /// <summary>
@@ -340,6 +375,6 @@ namespace TCP.Client.TCP
             tb_console.AppendText($"{text}\r\n");
         }
 
-
+        
     }
 }
