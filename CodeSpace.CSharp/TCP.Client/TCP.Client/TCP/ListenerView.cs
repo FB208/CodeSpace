@@ -192,7 +192,6 @@ namespace TCP.Client.TCP
             {
 
             }
-            
         }
         /// <summary>
         /// 响应接收的消息
