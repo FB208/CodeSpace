@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBCodeProduce", "FBCodeProdece\FBCodeProduce.csproj", "{D1AC1AF6-7FD6-42EE-9BB4-C99185E20638}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Standard", "..\Common\Common.Standard\Common.Standard.csproj", "{BA189D75-5EEE-4951-B18E-B5DC8F8B0603}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1AC1AF6-7FD6-42EE-9BB4-C99185E20638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1AC1AF6-7FD6-42EE-9BB4-C99185E20638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1AC1AF6-7FD6-42EE-9BB4-C99185E20638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1AC1AF6-7FD6-42EE-9BB4-C99185E20638}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA189D75-5EEE-4951-B18E-B5DC8F8B0603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA189D75-5EEE-4951-B18E-B5DC8F8B0603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA189D75-5EEE-4951-B18E-B5DC8F8B0603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA189D75-5EEE-4951-B18E-B5DC8F8B0603}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10DE0B00-6A10-480F-A863-DCE49721722B}
+	EndGlobalSection
+EndGlobal
