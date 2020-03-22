@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>FBCodeProduce</RootNamespace>
     <AssemblyName>FBCodeProduce</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,21 +50,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\DbCompareForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\DbCompareForm.cs" />
     <Compile Include="Forms\DbCompareForm.Designer.cs">
       <DependentUpon>DbCompareForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="Helpers\DataTableHelper.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
-    <Compile Include="HomeForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Helpers\NewtonjsonHelper.cs" />
+    <Compile Include="HomeForm.cs" />
     <Compile Include="HomeForm.Designer.cs">
       <DependentUpon>HomeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\DataDictionary.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\DbCompareForm.resx">
@@ -100,13 +99,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.Standard\Common.Standard.csproj">
-      <Project>{ba189d75-5eee-4951-b18e-b5dc8f8b0603}</Project>
-      <Name>Common.Standard</Name>
-    </ProjectReference>
+    <Content Include="images\line.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="images\line.png" />
+    <Folder Include="BLL\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

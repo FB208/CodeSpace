@@ -76,7 +76,7 @@
             this.tb_DatabaseName.Name = "tb_DatabaseName";
             this.tb_DatabaseName.Size = new System.Drawing.Size(129, 21);
             this.tb_DatabaseName.TabIndex = 5;
-            this.tb_DatabaseName.Text = "NewReport";
+            this.tb_DatabaseName.Text = "fas_jcd";
             // 
             // btn_connect
             // 

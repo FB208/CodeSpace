@@ -7,9 +7,9 @@
       "IsUse": false
     },
     {
-      "ServerName": "FbInCbhb",
+      "ServerName": "server39",
       "ServerType": "Microsoft SQL Server",
-      "ConnectionString": "Data Source=.;Initial Catalog=NewReport;Integrated Security=True;",
+      "ConnectionString": "server=39.98.138.165;uid=sa;pwd=Yang123!@#;database=fas_jcd;Pooling=true;",
       "IsUse": true
     },
     {
