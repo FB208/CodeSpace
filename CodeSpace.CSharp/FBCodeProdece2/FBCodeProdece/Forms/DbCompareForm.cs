@@ -22,7 +22,7 @@ namespace FBCodeProduce.Forms
         }
         public void InitData()
         {
-            JToken json = NewtonjsonHelper.ReadFile(Global.USER_SETTING_JSON_PATH);
+            JToken json = NewtonjsonHelper.ReadFile(Global.USER_SETTING_PATH);
             //读取链接名称并赋值给下拉框
             List<string> serverNames1 = json["DbServer"].Children().Select(m => m.Value<string>("ServerName")).ToList();
             List<string> serverNames2 = json["DbServer"].Children().Select(m => m.Value<string>("ServerName")).ToList();

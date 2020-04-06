@@ -1,0 +1,26 @@
+{
+  "DataTypeComtrast": [
+    {
+      "Mysql": {
+        "tinyint": "int",
+        "smallint": "int",
+        "mediumint": "int",
+        "int": "int",
+        "bigint": "int",
+        "float": "float",
+        "double": "double",
+        "decimal": "double",
+        "char": "string",
+        "varchar": "string",
+        "tinytext": "string",
+        "text": "string",
+        "mediumtext": "string",
+        "longtext": "string",
+        "date": "DateTime",
+        "time": "DateTime",
+        "datetime": "DateTime",
+        "timestamp": "TimeStamp"
+      }
+    }
+  ]
+}

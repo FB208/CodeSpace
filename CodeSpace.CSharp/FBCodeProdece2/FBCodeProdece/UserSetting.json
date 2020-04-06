@@ -9,6 +9,12 @@
     "ServerName": "server39",
     "ServerType": "Microsoft SQL Server",
     "ConnectionString": "server=39.98.138.165;uid=sa;pwd=Yang123!@#;database=master;Pooling=true;",
+    "IsUse": false
+  },
+  {
+    "ServerName": "mysql39",
+    "ServerType": "MySql",
+    "ConnectionString": "server=39.98.138.165;User Id=root;password=QingHong123!@#;Database=ocmanage",
     "IsUse": true
   }
   ]

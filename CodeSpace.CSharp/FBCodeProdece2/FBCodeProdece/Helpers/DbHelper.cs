@@ -12,7 +12,7 @@ namespace FBCodeProduce.Helpers
 {
     public abstract class DbHelper
     {
-        static JToken json = NewtonjsonHelper.ReadFile(Global.USER_SETTING_JSON_PATH);
+        static JToken json = NewtonjsonHelper.ReadFile(Global.USER_SETTING_PATH);
         //数据库连接字符串(web.config来配置)，多数据库可使用DbHelperQLP来实现.
         //public static string connectionString = PubConstant.ConnectionString;
         public static string connectionString = json["DbServer"].Children().FirstOrDefault(m => m.Value<bool>("IsUse") == true).Value<string>("ConnectionString");
