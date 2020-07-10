@@ -80,8 +80,10 @@
     <Compile Include="Global.cs" />
     <Compile Include="Helpers\DataTableHelper.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\MySqlDbHelper.cs" />
     <Compile Include="Helpers\NewtonjsonHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="HomeForm.cs">
       <SubType>Form</SubType>
     </Compile>

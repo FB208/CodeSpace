@@ -16,6 +16,7 @@
         "text": "string",
         "mediumtext": "string",
         "longtext": "string",
+        "enum": "string",
         "date": "DateTime",
         "time": "DateTime",
         "datetime": "DateTime",

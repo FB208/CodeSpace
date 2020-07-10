@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Common.Standard
+namespace FBCodeProduce.Helpers
 {
     public class FileHelper
     {
@@ -54,7 +56,7 @@ namespace Common.Standard
             return fs;
         }
         /// <summary>
-        /// 创建或打开文件
+        /// 创建文件
         /// </summary>
         /// <param name="filePath"></param>
         public static void Create(string filePath)
@@ -69,9 +71,9 @@ namespace Common.Standard
         /// </summary>
         /// <param name="filePath">文件路径</param>
         /// <param name="content">字符串</param>
-        public static void OpenWrite(string filePath,string content)
+        public static void OpenWrite(string filePath, string content)
         {
-            using (StreamWriter sw = new StreamWriter(filePath,true))
+            using (StreamWriter sw = new StreamWriter(filePath, true))
             {
                 sw.WriteLine(content);
             }
@@ -126,11 +128,17 @@ namespace Common.Standard
         /// <param name="path"></param>
         public static void ClearFolder(string path)
         {
-            DirectoryInfo aDirectoryInfo = new DirectoryInfo(Path.GetDirectoryName(path));
-            FileInfo[] files = aDirectoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
+            DirectoryInfo aDirectoryInfo = new DirectoryInfo(path);
+            FileInfo[] files = aDirectoryInfo.GetFiles();
+            DirectoryInfo[] dirs = aDirectoryInfo.GetDirectories();
             foreach (FileInfo f in files)
             {
                 File.Delete(f.FullName);
+            }
+            foreach (DirectoryInfo d in dirs)
+            {
+                ClearFolder(d.FullName);
+                Directory.Delete(d.FullName);
             }
         }
     }
