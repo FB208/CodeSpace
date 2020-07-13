@@ -30,6 +30,8 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btn_BLL = new System.Windows.Forms.Button();
+            this.btn_dal = new System.Windows.Forms.Button();
             this.btn_forfolder = new System.Windows.Forms.Button();
             this.btn_model = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -40,7 +42,6 @@
             this.tb_result = new System.Windows.Forms.TextBox();
             this.cb_dbs = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.btn_dal = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -57,6 +58,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btn_BLL);
             this.tabPage1.Controls.Add(this.btn_dal);
             this.tabPage1.Controls.Add(this.btn_forfolder);
             this.tabPage1.Controls.Add(this.btn_model);
@@ -66,6 +68,26 @@
             this.tabPage1.Size = new System.Drawing.Size(1154, 116);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "C#";
+            // 
+            // btn_BLL
+            // 
+            this.btn_BLL.Location = new System.Drawing.Point(168, 6);
+            this.btn_BLL.Name = "btn_BLL";
+            this.btn_BLL.Size = new System.Drawing.Size(75, 23);
+            this.btn_BLL.TabIndex = 3;
+            this.btn_BLL.Text = "BLL";
+            this.btn_BLL.UseVisualStyleBackColor = true;
+            this.btn_BLL.Click += new System.EventHandler(this.btn_BLL_Click);
+            // 
+            // btn_dal
+            // 
+            this.btn_dal.Location = new System.Drawing.Point(87, 6);
+            this.btn_dal.Name = "btn_dal";
+            this.btn_dal.Size = new System.Drawing.Size(75, 23);
+            this.btn_dal.TabIndex = 2;
+            this.btn_dal.Text = "DAL";
+            this.btn_dal.UseVisualStyleBackColor = true;
+            this.btn_dal.Click += new System.EventHandler(this.btn_dal_Click);
             // 
             // btn_forfolder
             // 
@@ -83,7 +105,7 @@
             this.btn_model.Name = "btn_model";
             this.btn_model.Size = new System.Drawing.Size(75, 23);
             this.btn_model.TabIndex = 0;
-            this.btn_model.Text = "模型";
+            this.btn_model.Text = "Model";
             this.btn_model.UseVisualStyleBackColor = true;
             this.btn_model.Click += new System.EventHandler(this.btn_model_Click);
             // 
@@ -157,16 +179,6 @@
             this.label3.TabIndex = 17;
             this.label3.Text = "命名空间：";
             // 
-            // btn_dal
-            // 
-            this.btn_dal.Location = new System.Drawing.Point(87, 6);
-            this.btn_dal.Name = "btn_dal";
-            this.btn_dal.Size = new System.Drawing.Size(75, 23);
-            this.btn_dal.TabIndex = 2;
-            this.btn_dal.Text = "DAL";
-            this.btn_dal.UseVisualStyleBackColor = true;
-            this.btn_dal.Click += new System.EventHandler(this.btn_dal_Click);
-            // 
             // EntityMySqlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -206,5 +218,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btn_forfolder;
         private System.Windows.Forms.Button btn_dal;
+        private System.Windows.Forms.Button btn_BLL;
     }
 }

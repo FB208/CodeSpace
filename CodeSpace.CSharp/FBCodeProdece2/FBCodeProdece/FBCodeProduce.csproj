@@ -77,6 +77,12 @@
     <Compile Include="Forms\EntityMySqlForm.Designer.cs">
       <DependentUpon>EntityMySqlForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\StringBuilderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StringBuilderForm.Designer.cs">
+      <DependentUpon>StringBuilderForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="Helpers\DataTableHelper.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
@@ -101,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EntityMySqlForm.resx">
       <DependentUpon>EntityMySqlForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StringBuilderForm.resx">
+      <DependentUpon>StringBuilderForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HomeForm.resx">
       <DependentUpon>HomeForm.cs</DependentUpon>

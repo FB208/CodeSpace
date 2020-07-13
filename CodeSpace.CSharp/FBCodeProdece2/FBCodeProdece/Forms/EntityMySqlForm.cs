@@ -95,7 +95,7 @@ namespace FBCodeProduce.Forms
             DataTable dt = MySqlDbHelper.GetTableColums(dbName, tableName);
             StringBuilder result = new StringBuilder();
             result.Append($"using System; \r\n");
-            result.Append($"namespace {tb_namespace.Text.Trim()}\r\n");
+            result.Append($"namespace {tb_namespace.Text.Trim()}.Model\r\n");
             result.Append($"{{ \r\n");
             result.Append(" ".repeat(4) + $"public class {tableName}\r\n");
             result.Append(" ".repeat(4) + $"{{ \r\n");
@@ -115,87 +115,12 @@ namespace FBCodeProduce.Forms
             result.Append($"}} \r\n");
             return result.ToString();
         }
-
-        private string SplitCols(DataTable dt)
+        private string CreateDAL(string dbName,string tableName)
         {
-            StringBuilder res = new StringBuilder();
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                res.Append($"{dt.Rows[i]["列名"]},");
-            }
-            return res.ToString().TrimEnd(',');
-        }
-        private string SplitValues(DataTable dt)
-        {
-            StringBuilder res = new StringBuilder();
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                res.Append($"@{dt.Rows[i]["列名"]},");
-            }
-            return res.ToString().TrimEnd(',');
-        }
-
-        private string SplitParams(DataTable dt)
-        {
-            StringBuilder res = new StringBuilder();
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                res.Append(" ".repeat(12) + $"new MySqlParameter(\"@{dt.Rows[i]["列名"]}\",model.{dt.Rows[i]["列名"]}),\r\n");
-            }
-            return res.ToString().TrimEnd(',');
-        }
-        /// <summary>
-        /// 传入列，获取对应.net的类型
-        /// </summary>
-        /// <param name="dr"></param>
-        /// <returns></returns>
-        private string GetTypeString(DataRow dr)
-        {
-            var ss = appSetting["DataTypeComtrast"].Children()["Mysql"];
-            string typeString = ss.Values(dr["数据类型"] + "").FirstOrDefault().ToString();
-
-            //判断是否可空
-            string[] addNullArray = new string[] { "int", "DateTime" };
-            if (addNullArray.Contains(typeString)&&dr["是否为空"] + ""=="YES")
-            {
-                typeString += "?";
-            }
-
-            return typeString;
-        }
-        #endregion
-
-        /// <summary>
-        /// 批量导出
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btn_forfolder_Click(object sender, EventArgs e)
-        {
-            string dbName = cb_dbs.SelectedValue.ToString();
-            string folderPath = Application.StartupPath+"\\pl";
-            FileHelper.ClearFolder(folderPath);//清空文件夹
-
-            FileHelper.CreateDirectory($"{folderPath}\\Model");
-            DataTable tables = MySqlDbHelper.GetTables(dbName);
-            for (int i = 0; i < tables.Rows.Count; i++)
-            {
-                string tableName = tables.Rows[i]["TABLE_NAME"].ToString();
-                string filePath = $"{folderPath}\\Model\\{tableName}.cs";
-                //FileHelper.Create(filePath);
-                FileHelper.OpenWrite(filePath, CreateModel(dbName, tableName));
-            }
-            tb_result.Text+="批量导出成功";
-        }
-
-        private void btn_dal_Click(object sender, EventArgs e)
-        {
-            string dbName = cb_dbs.SelectedValue.ToString();
-            string tableName = cb_tables.SelectedValue.ToString();
             DataTable dt = MySqlDbHelper.GetTableColums(dbName, tableName);
             #region 获取主键行
             //暂不适应多主键
-            DataRow priRow=null;
+            DataRow priRow = null;
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 if (dt.Rows[i]["KEY"] + "" == "PRI")
@@ -204,14 +129,29 @@ namespace FBCodeProduce.Forms
                     break;
                 }
             }
-            if (priRow==null)
+            if (priRow == null)
             {
-                return;
+                return "";
             }
             #endregion
-            
+
             StringBuilder result = new StringBuilder();
-            result.Append($"namespace {tb_namespace.Text.Trim()}\r\n");
+            #region 必要引用
+            result.Append("using System; \r\n");
+            result.Append("using System.Text; \r\n");
+            result.Append("using System.Data; \r\n");
+            result.Append("using System.Collections.Generic; \r\n");
+            result.Append("using MySql.Data.MySqlClient; \r\n");
+            result.Append("using Microsoft.Extensions.DependencyInjection; \r\n");
+            result.Append("using DLL.Basic; \r\n");
+            result.Append("using DLL.Model; \r\n");
+            result.Append("using Common.IOCHelper; \r\n");
+            #endregion
+
+
+
+
+            result.Append($"namespace {tb_namespace.Text.Trim()}.DAL\r\n");
             result.Append($"{{ \r\n");
             result.Append($"[UseDI(ServiceLifetime.Scoped, typeof({tableName}DAL))] \r\n");
             result.Append(" ".repeat(4) + $"public class {tableName}DAL:BasicDAL\r\n");
@@ -250,7 +190,7 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(8) + $"List<MySqlParameter> paramList = new List<MySqlParameter>(); \r\n");
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                if (dt.Rows[i]["KEY"]+""=="PRI")
+                if (dt.Rows[i]["KEY"] + "" == "PRI")
                 {
                     updateWhereStr.Append($" {dt.Rows[i]["列名"]} = @{dt.Rows[i]["列名"]} and");
                     result.Append($"paramList.Add(new MySqlParameter(\"@{dt.Rows[i]["列名"]}\", model.{dt.Rows[i]["列名"]}));");
@@ -264,7 +204,7 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(8) + $"sqlStr.Append(\" UPDATE {tableName} \"); \r\n");
             result.Append(" ".repeat(8) + $"sqlStr.Append(\" SET  \"); \r\n");
             result.Append(" ".repeat(8) + $"sqlStr.Append(updateStr.ToString().TrimEnd(',')); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {updateWhereStr.ToString().Substring(0, updateWhereStr.Length-3)} \"); \r\n");
+            result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {updateWhereStr.ToString().Substring(0, updateWhereStr.Length - 3)} \"); \r\n");
             result.Append(" ".repeat(8) + $"int count = mysql.ExecuteSql(sqlStr.ToString(), paramList.ToArray()); \r\n");
             result.Append(" ".repeat(8) + $"return count > 0; \r\n");
             result.Append(" ".repeat(4) + $"}} \r\n");
@@ -358,9 +298,269 @@ namespace FBCodeProduce.Forms
             #endregion
             result.Append($"}} \r\n");
             result.Append($"}} \r\n");
-            tb_result.Text = result.ToString();
+
+            return result.ToString();
+        }
+        private string CreateBLL(string dbName, string tableName)
+        {
+            DataTable dt = MySqlDbHelper.GetTableColums(dbName, tableName);
+            #region 获取主键行
+            //暂不适应多主键
+            DataRow priRow = null;
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if (dt.Rows[i]["KEY"] + "" == "PRI")
+                {
+                    priRow = dt.Rows[i];
+                    break;
+                }
+            }
+            if (priRow == null)
+            {
+                return "";
+            }
+            #endregion
+
+            StringBuilder result = new StringBuilder();
+            #region 必要引用
+            result.Append(" using System.Data; \r\n");
+            result.Append(" using System.Collections.Generic; \r\n");
+            result.Append(" using MySql.Data.MySqlClient; \r\n");
+            result.Append(" using Microsoft.Extensions.DependencyInjection; \r\n");
+            result.Append(" using DLL.Basic; \r\n");
+            result.Append(" using DLL.Model; \r\n");
+            result.Append(" using DLL.DAL; \r\n");
+            result.Append(" using Common.DataHelper; \r\n");
+            result.Append(" using Common.IOCHelper; \r\n");
+
+            #endregion
+            result.Append($"namespace {tb_namespace.Text.Trim()}.BLL\r\n");
+            result.Append($"{{ \r\n");
+            result.Append($"[UseDI(ServiceLifetime.Scoped, typeof({tableName}BLL))] \r\n");
+            result.Append(" ".repeat(4) + $"public class {tableName}BLL:BasicBLL\r\n");
+            result.Append(" ".repeat(4) + $"{{ \r\n");
+            result.Append(" ".repeat(4) + $"private {tableName}DAL dal;\r\n");
+            result.Append(" ".repeat(4) + $"public {tableName}BLL({tableName}DAL _dal) \r\n");
+            result.Append(" ".repeat(4) + $"{{ \r\n");
+            result.Append(" ".repeat(8) + $"dal=_dal; \r\n");
+            result.Append(" ".repeat(4) + $"}} \r\n");
+
+            #region insert
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// 插入一条记录 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+            result.Append(" ".repeat(4) + $" public bool Insert({tableName} model) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" return dal.Insert(model); \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+
+
+            #endregion
+            #region update
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// 修改记录 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+            result.Append(" ".repeat(4) + $" public bool Update({tableName} model) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" return dal.Update(model); \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+            #endregion
+            #region delete
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// 删除记录 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+            result.Append(" ".repeat(4) + $" public bool Delete({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" return dal.Delete({priRow["列名"]}); \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+            #endregion
+            #region GetModel
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// 根据唯一标识获取实体数据 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" public {tableName} GetModel({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" return dal.GetModel({priRow["列名"]}).ToDataEntity<{tableName}>(); \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+
+            #endregion
+            #region GetList
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// 根据条件查询 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"whereStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"orderStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"param\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+            result.Append(" ".repeat(4) + $" public List<{tableName}> GetList(string whereStr, string orderStr, MySqlParameter[] param=null) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetList(whereStr, orderStr, param); \r\n");
+            result.Append(" ".repeat(4) + $" List<{tableName}> list = null; \r\n");
+            result.Append(" ".repeat(4) + $" if (dt.Rows.Count > 0) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// 根据条件查询 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"whereStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"orderStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+            result.Append(" ".repeat(4) + $" public List<{tableName}> GetList(string whereStr, string orderStr, {tableName} model) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetList(whereStr, orderStr, this.ModelToParams(whereStr,model)); \r\n");
+            result.Append(" ".repeat(4) + $" List<{tableName}> list = null; \r\n");
+            result.Append(" ".repeat(4) + $" if (dt.Rows.Count > 0) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+
+
+            #endregion
+            #region GetListByPage
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" ///  分页获取数据 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"pageSize\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"pageIndex\">从1开始</param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"whereStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"orderStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"param\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"total\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+            result.Append(" ".repeat(4) + $" public List<{tableName}> GetListByPage(int pageSize, int pageIndex, string whereStr, string orderStr, MySqlParameter[] param, out int total) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetListByPage(pageSize, pageIndex - 1, whereStr, orderStr, param, out total); \r\n");
+            result.Append(" ".repeat(4) + $" List<{tableName}> list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+            result.Append(" ".repeat(4) + $" ///  分页获取数据 \r\n");
+            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"pageSize\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"pageIndex\">从1开始</param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"whereStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"orderStr\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <param name=\"total\"></param> \r\n");
+            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+            result.Append(" ".repeat(4) + $" public List<{tableName}> GetListByPage(int pageSize, int pageIndex, string whereStr, string orderStr, {tableName} model, out int total) \r\n");
+            result.Append(" ".repeat(4) + $" {{ \r\n");
+            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetListByPage(pageSize, pageIndex - 1, whereStr, orderStr, this.ModelToParams(whereStr, model), out total); \r\n");
+            result.Append(" ".repeat(4) + $" List<{tableName}> list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(4) + $" }} \r\n");
+
+            #endregion
+            result.Append($"}} \r\n");
+            result.Append($"}} \r\n");
+            return result.ToString();
+        }
+        private string SplitCols(DataTable dt)
+        {
+            StringBuilder res = new StringBuilder();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                res.Append($"{dt.Rows[i]["列名"]},");
+            }
+            return res.ToString().TrimEnd(',');
+        }
+        private string SplitValues(DataTable dt)
+        {
+            StringBuilder res = new StringBuilder();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                res.Append($"@{dt.Rows[i]["列名"]},");
+            }
+            return res.ToString().TrimEnd(',');
         }
 
-       
+        private string SplitParams(DataTable dt)
+        {
+            StringBuilder res = new StringBuilder();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                res.Append(" ".repeat(12) + $"new MySqlParameter(\"@{dt.Rows[i]["列名"]}\",model.{dt.Rows[i]["列名"]}),\r\n");
+            }
+            return res.ToString().TrimEnd(',');
+        }
+        /// <summary>
+        /// 传入列，获取对应.net的类型
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <returns></returns>
+        private string GetTypeString(DataRow dr)
+        {
+            var ss = appSetting["DataTypeComtrast"].Children()["Mysql"];
+            string typeString = ss.Values(dr["数据类型"] + "").FirstOrDefault().ToString();
+
+            //判断是否可空
+            string[] addNullArray = new string[] { "int", "DateTime" };
+            if (addNullArray.Contains(typeString)&&dr["是否为空"] + ""=="YES")
+            {
+                typeString += "?";
+            }
+
+            return typeString;
+        }
+        #endregion
+
+        /// <summary>
+        /// 批量导出
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_forfolder_Click(object sender, EventArgs e)
+        {
+            string dbName = cb_dbs.SelectedValue.ToString();
+            string folderPath = Application.StartupPath+"\\pl";
+            FileHelper.ClearFolder(folderPath);//清空文件夹
+
+            DataTable tables = MySqlDbHelper.GetTables(dbName);
+
+            FileHelper.CreateDirectory($"{folderPath}\\Model");
+            FileHelper.CreateDirectory($"{folderPath}\\DAL");
+            FileHelper.CreateDirectory($"{folderPath}\\BLL");
+            for (int i = 0; i < tables.Rows.Count; i++)
+            {
+                string tableName = tables.Rows[i]["TABLE_NAME"].ToString();
+                string filePath = $"{folderPath}\\Model\\{tableName}.cs";
+                string filePath_DAL = $"{folderPath}\\DAL\\{tableName}DAL.cs";
+                string filePath_BLL = $"{folderPath}\\BLL\\{tableName}BLL.cs";
+                //FileHelper.Create(filePath);
+                FileHelper.OpenWrite(filePath, CreateModel(dbName, tableName));
+                FileHelper.OpenWrite(filePath_DAL, CreateDAL(dbName, tableName));
+                FileHelper.OpenWrite(filePath_BLL, CreateBLL(dbName, tableName));
+            }
+            
+
+            tb_result.Text+="批量导出成功";
+        }
+
+        private void btn_dal_Click(object sender, EventArgs e)
+        {
+            string dbName = cb_dbs.SelectedValue.ToString();
+            string tableName = cb_tables.SelectedValue.ToString();
+            tb_result.Text = CreateDAL(dbName, tableName);
+        }
+
+        private void btn_BLL_Click(object sender, EventArgs e)
+        {
+            string dbName = cb_dbs.SelectedValue.ToString();
+            string tableName = cb_tables.SelectedValue.ToString();
+
+            tb_result.Text = CreateBLL(dbName, tableName)
+;        }
     }
 }
