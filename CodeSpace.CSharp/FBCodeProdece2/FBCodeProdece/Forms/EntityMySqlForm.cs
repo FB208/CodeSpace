@@ -400,13 +400,13 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
             result.Append(" ".repeat(4) + $" public List<{tableName}> GetList(string whereStr, string orderStr, MySqlParameter[] param=null) \r\n");
             result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetList(whereStr, orderStr, param); \r\n");
-            result.Append(" ".repeat(4) + $" List<{tableName}> list = null; \r\n");
-            result.Append(" ".repeat(4) + $" if (dt.Rows.Count > 0) \r\n");
-            result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" list = dt.ToDataList<{tableName}>(); \r\n");
-            result.Append(" ".repeat(4) + $" }} \r\n");
-            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(8) + $" DataTable dt = dal.GetList(whereStr, orderStr, param); \r\n");
+            result.Append(" ".repeat(8) + $" List<{tableName}> list = new List<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" if (dt.Rows.Count > 0) \r\n");
+            result.Append(" ".repeat(8) + $" {{ \r\n");
+            result.Append(" ".repeat(12) + $" list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" }} \r\n");
+            result.Append(" ".repeat(8) + $" return list; \r\n");
             result.Append(" ".repeat(4) + $" }} \r\n");
             result.Append(" ".repeat(4) + $" /// <summary> \r\n");
             result.Append(" ".repeat(4) + $" /// 根据条件查询 \r\n");
@@ -417,13 +417,13 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
             result.Append(" ".repeat(4) + $" public List<{tableName}> GetList(string whereStr, string orderStr, {tableName} model) \r\n");
             result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetList(whereStr, orderStr, this.ModelToParams(whereStr,model)); \r\n");
-            result.Append(" ".repeat(4) + $" List<{tableName}> list = null; \r\n");
-            result.Append(" ".repeat(4) + $" if (dt.Rows.Count > 0) \r\n");
-            result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" list = dt.ToDataList<{tableName}>(); \r\n");
-            result.Append(" ".repeat(4) + $" }} \r\n");
-            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(8) + $" DataTable dt = dal.GetList(whereStr, orderStr, this.ModelToParams(whereStr,model)); \r\n");
+            result.Append(" ".repeat(8) + $" List<{tableName}> list = new List<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" if (dt.Rows.Count > 0) \r\n");
+            result.Append(" ".repeat(8) + $" {{ \r\n");
+            result.Append(" ".repeat(12) + $" list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" }} \r\n");
+            result.Append(" ".repeat(8) + $" return list; \r\n");
             result.Append(" ".repeat(4) + $" }} \r\n");
 
 
@@ -441,9 +441,13 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
             result.Append(" ".repeat(4) + $" public List<{tableName}> GetListByPage(int pageSize, int pageIndex, string whereStr, string orderStr, MySqlParameter[] param, out int total) \r\n");
             result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetListByPage(pageSize, pageIndex - 1, whereStr, orderStr, param, out total); \r\n");
-            result.Append(" ".repeat(4) + $" List<{tableName}> list = dt.ToDataList<{tableName}>(); \r\n");
-            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(8) + $" DataTable dt = dal.GetListByPage(pageSize, pageIndex - 1, whereStr, orderStr, param, out total); \r\n");
+            result.Append(" ".repeat(8) + $" List<{tableName}> list = new List<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" if (dt.Rows.Count > 0) \r\n");
+            result.Append(" ".repeat(8) + $" {{ \r\n");
+            result.Append(" ".repeat(12) + $" list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" }} \r\n");
+            result.Append(" ".repeat(8) + $" return list; \r\n");
             result.Append(" ".repeat(4) + $" }} \r\n");
             result.Append(" ".repeat(4) + $" /// <summary> \r\n");
             result.Append(" ".repeat(4) + $" ///  分页获取数据 \r\n");
@@ -457,9 +461,13 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
             result.Append(" ".repeat(4) + $" public List<{tableName}> GetListByPage(int pageSize, int pageIndex, string whereStr, string orderStr, {tableName} model, out int total) \r\n");
             result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" DataTable dt = dal.GetListByPage(pageSize, pageIndex - 1, whereStr, orderStr, this.ModelToParams(whereStr, model), out total); \r\n");
-            result.Append(" ".repeat(4) + $" List<{tableName}> list = dt.ToDataList<{tableName}>(); \r\n");
-            result.Append(" ".repeat(4) + $" return list; \r\n");
+            result.Append(" ".repeat(8) + $" DataTable dt = dal.GetListByPage(pageSize, pageIndex - 1, whereStr, orderStr, this.ModelToParams(whereStr, model), out total); \r\n");
+            result.Append(" ".repeat(8) + $" List<{tableName}> list = new List<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" if (dt.Rows.Count > 0) \r\n");
+            result.Append(" ".repeat(8) + $" {{ \r\n");
+            result.Append(" ".repeat(12) + $" list = dt.ToDataList<{tableName}>(); \r\n");
+            result.Append(" ".repeat(8) + $" }} \r\n");
+            result.Append(" ".repeat(8) + $" return list; \r\n");
             result.Append(" ".repeat(4) + $" }} \r\n");
 
             #endregion
