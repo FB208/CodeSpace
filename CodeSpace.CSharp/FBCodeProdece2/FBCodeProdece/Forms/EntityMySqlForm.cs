@@ -118,6 +118,7 @@ namespace FBCodeProduce.Forms
         private string CreateDAL(string dbName,string tableName)
         {
             DataTable dt = MySqlDbHelper.GetTableColums(dbName, tableName);
+            bool isView = false;
             #region 获取主键行
             //暂不适应多主键
             DataRow priRow = null;
@@ -131,7 +132,8 @@ namespace FBCodeProduce.Forms
             }
             if (priRow == null)
             {
-                return "";
+                isView = true;
+                //return "";
             }
             #endregion
 
@@ -163,83 +165,100 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(4) + $"}} \r\n");
 
             #region insert
-            result.Append(" ".repeat(4) + $"/// <summary> \r\n");
-            result.Append(" ".repeat(4) + $"/// 插入数据 \r\n");
-            result.Append(" ".repeat(4) + $"/// </summary> \r\n");
-            result.Append(" ".repeat(4) + $"public bool Insert({tableName} model) \r\n");
-            result.Append(" ".repeat(4) + $"{{ \r\n");
-            result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" INSERT INTO {tableName} \"); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" ({SplitCols(dt)}) \"); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" VALUES({SplitValues(dt)}) \");  \r\n");
-            result.Append(" ".repeat(8) + $"MySqlParameter[] param = new MySqlParameter[] {{ \r\n");
-            result.Append(" ".repeat(8) + $"{SplitParams(dt)}  \r\n");
-            result.Append(" ".repeat(8) + $"}};\r\n");
-            result.Append(" ".repeat(8) + $"int count = mysql.ExecuteSql(sqlStr.ToString(), param); \r\n");
-            result.Append(" ".repeat(8) + $"return count>0;\r\n");
-            result.Append(" ".repeat(4) + $"}} \r\n");
+            if (!isView)
+            {
+                result.Append(" ".repeat(4) + $"/// <summary> \r\n");
+                result.Append(" ".repeat(4) + $"/// 插入数据 \r\n");
+                result.Append(" ".repeat(4) + $"/// </summary> \r\n");
+                result.Append(" ".repeat(4) + $"public bool Insert({tableName} model) \r\n");
+                result.Append(" ".repeat(4) + $"{{ \r\n");
+                result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" INSERT INTO {tableName} \"); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" ({SplitCols(dt)}) \"); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" VALUES({SplitValues(dt)}) \");  \r\n");
+                result.Append(" ".repeat(8) + $"MySqlParameter[] param = new MySqlParameter[] {{ \r\n");
+                result.Append(" ".repeat(8) + $"{SplitParams(dt)}  \r\n");
+                result.Append(" ".repeat(8) + $"}};\r\n");
+                result.Append(" ".repeat(8) + $"int count = mysql.ExecuteSql(sqlStr.ToString(), param); \r\n");
+                result.Append(" ".repeat(8) + $"return count>0;\r\n");
+                result.Append(" ".repeat(4) + $"}} \r\n");
+            }
+            
             #endregion
             #region update
             StringBuilder updateWhereStr = new StringBuilder();
-            result.Append(" ".repeat(4) + $"/// <summary> \r\n");
-            result.Append(" ".repeat(4) + $"/// 修改数据 \r\n");
-            result.Append(" ".repeat(4) + $"/// </summary> \r\n");
-            result.Append(" ".repeat(4) + $"public bool Update({tableName} model) \r\n");
-            result.Append(" ".repeat(4) + $"{{ \r\n");
-            result.Append(" ".repeat(8) + $"StringBuilder updateStr = new StringBuilder(); \r\n");
-            result.Append(" ".repeat(8) + $"List<MySqlParameter> paramList = new List<MySqlParameter>(); \r\n");
-            for (int i = 0; i < dt.Rows.Count; i++)
+            if (!isView)
             {
-                if (dt.Rows[i]["KEY"] + "" == "PRI")
+                result.Append(" ".repeat(4) + $"/// <summary> \r\n");
+                result.Append(" ".repeat(4) + $"/// 修改数据 \r\n");
+                result.Append(" ".repeat(4) + $"/// </summary> \r\n");
+                result.Append(" ".repeat(4) + $"public bool Update({tableName} model) \r\n");
+                result.Append(" ".repeat(4) + $"{{ \r\n");
+                result.Append(" ".repeat(8) + $"StringBuilder updateStr = new StringBuilder(); \r\n");
+                result.Append(" ".repeat(8) + $"List<MySqlParameter> paramList = new List<MySqlParameter>(); \r\n");
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    updateWhereStr.Append($" {dt.Rows[i]["列名"]} = @{dt.Rows[i]["列名"]} and");
-                    result.Append($"paramList.Add(new MySqlParameter(\"@{dt.Rows[i]["列名"]}\", model.{dt.Rows[i]["列名"]}));");
+                    if (dt.Rows[i]["KEY"] + "" == "PRI")
+                    {
+                        updateWhereStr.Append($" {dt.Rows[i]["列名"]} = @{dt.Rows[i]["列名"]} and");
+                        result.Append($"paramList.Add(new MySqlParameter(\"@{dt.Rows[i]["列名"]}\", model.{dt.Rows[i]["列名"]}));");
+                    }
+                    else
+                    {
+                        result.Append(" ".repeat(8) + $"if (model.{dt.Rows[i]["列名"]} != null){{updateStr.Append(\" {dt.Rows[i]["列名"]}=@{dt.Rows[i]["列名"]},\");paramList.Add(new MySqlParameter(\"@{dt.Rows[i]["列名"]}\", model.{dt.Rows[i]["列名"]})); }} \r\n");
+                    }
                 }
-                else
-                {
-                    result.Append(" ".repeat(8) + $"if (model.{dt.Rows[i]["列名"]} != null){{updateStr.Append(\" {dt.Rows[i]["列名"]}=@{dt.Rows[i]["列名"]},\");paramList.Add(new MySqlParameter(\"@{dt.Rows[i]["列名"]}\", model.{dt.Rows[i]["列名"]})); }} \r\n");
-                }
+                result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" UPDATE {tableName} \"); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" SET  \"); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(updateStr.ToString().TrimEnd(',')); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {updateWhereStr.ToString().Substring(0, updateWhereStr.Length - 3)} \"); \r\n");
+                result.Append(" ".repeat(8) + $"int count = mysql.ExecuteSql(sqlStr.ToString(), paramList.ToArray()); \r\n");
+                result.Append(" ".repeat(8) + $"return count > 0; \r\n");
+                result.Append(" ".repeat(4) + $"}} \r\n");
             }
-            result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" UPDATE {tableName} \"); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" SET  \"); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(updateStr.ToString().TrimEnd(',')); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {updateWhereStr.ToString().Substring(0, updateWhereStr.Length - 3)} \"); \r\n");
-            result.Append(" ".repeat(8) + $"int count = mysql.ExecuteSql(sqlStr.ToString(), paramList.ToArray()); \r\n");
-            result.Append(" ".repeat(8) + $"return count > 0; \r\n");
-            result.Append(" ".repeat(4) + $"}} \r\n");
+
             #endregion
             #region delete
-            result.Append(" ".repeat(4) + $"/// <summary> \r\n");
-            result.Append(" ".repeat(4) + $"/// 删除单条数据 \r\n");
-            result.Append(" ".repeat(4) + $"/// </summary> \r\n");
-            result.Append(" ".repeat(4) + $"public bool Delete({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
-            result.Append(" ".repeat(4) + $"{{ \r\n");
-            result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" DELETE FROM {tableName} \"); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {priRow["列名"]} = @{priRow["列名"]} \"); \r\n");
-            result.Append(" ".repeat(8) + $"MySqlParameter[] param = new MySqlParameter[] {{ \r\n");
-            result.Append(" ".repeat(8) + $"    new MySqlParameter(\"@{priRow["列名"]}\",{priRow["列名"]})  \r\n");
-            result.Append(" ".repeat(8) + $"}};\r\n");
-            result.Append(" ".repeat(8) + $"int count = mysql.ExecuteSql(sqlStr.ToString(), param); \r\n");
-            result.Append(" ".repeat(8) + $"return count>0;\r\n");
-            result.Append(" ".repeat(4) + $"}} \r\n");
+            if (!isView)
+            {
+                result.Append(" ".repeat(4) + $"/// <summary> \r\n");
+                result.Append(" ".repeat(4) + $"/// 删除单条数据 \r\n");
+                result.Append(" ".repeat(4) + $"/// </summary> \r\n");
+                result.Append(" ".repeat(4) + $"public bool Delete({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
+                result.Append(" ".repeat(4) + $"{{ \r\n");
+                result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" DELETE FROM {tableName} \"); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {priRow["列名"]} = @{priRow["列名"]} \"); \r\n");
+                result.Append(" ".repeat(8) + $"MySqlParameter[] param = new MySqlParameter[] {{ \r\n");
+                result.Append(" ".repeat(8) + $"    new MySqlParameter(\"@{priRow["列名"]}\",{priRow["列名"]})  \r\n");
+                result.Append(" ".repeat(8) + $"}};\r\n");
+                result.Append(" ".repeat(8) + $"int count = mysql.ExecuteSql(sqlStr.ToString(), param); \r\n");
+                result.Append(" ".repeat(8) + $"return count>0;\r\n");
+                result.Append(" ".repeat(4) + $"}} \r\n");
+            }
+
+
             #endregion
             #region GetModel
-            result.Append(" ".repeat(4) + $"/// <summary> \r\n");
-            result.Append(" ".repeat(4) + $"/// 根据主键获取单条数据 \r\n");
-            result.Append(" ".repeat(4) + $"/// </summary> \r\n");
-            result.Append(" ".repeat(4) + $"public DataTable GetModel({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
-            result.Append(" ".repeat(4) + $"{{ \r\n");
-            result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" SELECT * FROM {tableName} \"); \r\n");
-            result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {priRow["列名"]} = @{priRow["列名"]} \"); \r\n");
-            result.Append(" ".repeat(8) + $"MySqlParameter[] param = new MySqlParameter[] {{ \r\n");
-            result.Append(" ".repeat(8) + $"new MySqlParameter(\"@{priRow["列名"]}\",{priRow["列名"]})  \r\n");
-            result.Append(" ".repeat(8) + $"}};\r\n");
-            result.Append(" ".repeat(8) + $"DataTable dt = mysql.Query(sqlStr.ToString(), param).Tables[0]; \r\n");
-            result.Append(" ".repeat(8) + $"return dt;\r\n");
-            result.Append(" ".repeat(4) + $"}} \r\n");
+            if (!isView)
+            {
+                result.Append(" ".repeat(4) + $"/// <summary> \r\n");
+                result.Append(" ".repeat(4) + $"/// 根据主键获取单条数据 \r\n");
+                result.Append(" ".repeat(4) + $"/// </summary> \r\n");
+                result.Append(" ".repeat(4) + $"public DataTable GetModel({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
+                result.Append(" ".repeat(4) + $"{{ \r\n");
+                result.Append(" ".repeat(8) + $"StringBuilder sqlStr = new StringBuilder(); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" SELECT * FROM {tableName} \"); \r\n");
+                result.Append(" ".repeat(8) + $"sqlStr.Append(\" WHERE {priRow["列名"]} = @{priRow["列名"]} \"); \r\n");
+                result.Append(" ".repeat(8) + $"MySqlParameter[] param = new MySqlParameter[] {{ \r\n");
+                result.Append(" ".repeat(8) + $"new MySqlParameter(\"@{priRow["列名"]}\",{priRow["列名"]})  \r\n");
+                result.Append(" ".repeat(8) + $"}};\r\n");
+                result.Append(" ".repeat(8) + $"DataTable dt = mysql.Query(sqlStr.ToString(), param).Tables[0]; \r\n");
+                result.Append(" ".repeat(8) + $"return dt;\r\n");
+                result.Append(" ".repeat(4) + $"}} \r\n");
+            }
+            
             #endregion
             #region GetList
             result.Append(" ".repeat(4) + $"/// <summary> \r\n");
@@ -304,6 +323,7 @@ namespace FBCodeProduce.Forms
         private string CreateBLL(string dbName, string tableName)
         {
             DataTable dt = MySqlDbHelper.GetTableColums(dbName, tableName);
+            bool isView = false;
             #region 获取主键行
             //暂不适应多主键
             DataRow priRow = null;
@@ -317,7 +337,8 @@ namespace FBCodeProduce.Forms
             }
             if (priRow == null)
             {
-                return "";
+                isView = true;
+                //  return "";
             }
             #endregion
 
@@ -346,49 +367,59 @@ namespace FBCodeProduce.Forms
             result.Append(" ".repeat(4) + $"}} \r\n");
 
             #region insert
-            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
-            result.Append(" ".repeat(4) + $" /// 插入一条记录 \r\n");
-            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
-            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
-            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
-            result.Append(" ".repeat(4) + $" public bool Insert({tableName} model) \r\n");
-            result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" return dal.Insert(model); \r\n");
-            result.Append(" ".repeat(4) + $" }} \r\n");
+            if (!isView)
+            {
+                result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+                result.Append(" ".repeat(4) + $" /// 插入一条记录 \r\n");
+                result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+                result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+                result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+                result.Append(" ".repeat(4) + $" public bool Insert({tableName} model) \r\n");
+                result.Append(" ".repeat(4) + $" {{ \r\n");
+                result.Append(" ".repeat(4) + $" return dal.Insert(model); \r\n");
+                result.Append(" ".repeat(4) + $" }} \r\n");
 
-
+            }
             #endregion
             #region update
-            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
-            result.Append(" ".repeat(4) + $" /// 修改记录 \r\n");
-            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
-            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
-            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
-            result.Append(" ".repeat(4) + $" public bool Update({tableName} model) \r\n");
-            result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" return dal.Update(model); \r\n");
-            result.Append(" ".repeat(4) + $" }} \r\n");
+            if (!isView)
+            {
+                result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+                result.Append(" ".repeat(4) + $" /// 修改记录 \r\n");
+                result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+                result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+                result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+                result.Append(" ".repeat(4) + $" public bool Update({tableName} model) \r\n");
+                result.Append(" ".repeat(4) + $" {{ \r\n");
+                result.Append(" ".repeat(4) + $" return dal.Update(model); \r\n");
+                result.Append(" ".repeat(4) + $" }} \r\n");
+            }
             #endregion
             #region delete
-            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
-            result.Append(" ".repeat(4) + $" /// 删除记录 \r\n");
-            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
-            result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
-            result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
-            result.Append(" ".repeat(4) + $" public bool Delete({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
-            result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" return dal.Delete({priRow["列名"]}); \r\n");
-            result.Append(" ".repeat(4) + $" }} \r\n");
+            if (!isView)
+            {
+                result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+                result.Append(" ".repeat(4) + $" /// 删除记录 \r\n");
+                result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+                result.Append(" ".repeat(4) + $" /// <param name=\"model\"></param> \r\n");
+                result.Append(" ".repeat(4) + $" /// <returns></returns> \r\n");
+                result.Append(" ".repeat(4) + $" public bool Delete({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
+                result.Append(" ".repeat(4) + $" {{ \r\n");
+                result.Append(" ".repeat(4) + $" return dal.Delete({priRow["列名"]}); \r\n");
+                result.Append(" ".repeat(4) + $" }} \r\n");
+            }
             #endregion
             #region GetModel
-            result.Append(" ".repeat(4) + $" /// <summary> \r\n");
-            result.Append(" ".repeat(4) + $" /// 根据唯一标识获取实体数据 \r\n");
-            result.Append(" ".repeat(4) + $" /// </summary> \r\n");
-            result.Append(" ".repeat(4) + $" public {tableName} GetModel({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
-            result.Append(" ".repeat(4) + $" {{ \r\n");
-            result.Append(" ".repeat(4) + $" return dal.GetModel({priRow["列名"]}).ToDataEntity<{tableName}>(); \r\n");
-            result.Append(" ".repeat(4) + $" }} \r\n");
-
+            if (!isView)
+            {
+                result.Append(" ".repeat(4) + $" /// <summary> \r\n");
+                result.Append(" ".repeat(4) + $" /// 根据唯一标识获取实体数据 \r\n");
+                result.Append(" ".repeat(4) + $" /// </summary> \r\n");
+                result.Append(" ".repeat(4) + $" public {tableName} GetModel({GetTypeString(priRow)} {priRow["列名"]}) \r\n");
+                result.Append(" ".repeat(4) + $" {{ \r\n");
+                result.Append(" ".repeat(4) + $" return dal.GetModel({priRow["列名"]}).ToDataEntity<{tableName}>(); \r\n");
+                result.Append(" ".repeat(4) + $" }} \r\n");
+            }
             #endregion
             #region GetList
             result.Append(" ".repeat(4) + $" /// <summary> \r\n");
