@@ -542,7 +542,7 @@ namespace FBCodeProduce.Forms
         private string GetTypeString(DataRow dr)
         {
             var ss = appSetting["DataTypeComtrast"].Children()["Mysql"];
-            string typeString = ss.Values(dr["数据类型"] + "").FirstOrDefault().ToString();
+            string typeString = ss.Values(dr["数据类型"] + "").FirstOrDefault()+"";
 
             //判断是否可空
             string[] addNullArray = new string[] { "int", "DateTime" };
