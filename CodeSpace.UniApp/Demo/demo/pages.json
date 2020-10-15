@@ -9,6 +9,12 @@
 			"style": {
 				"navigationBarTitleText": "信息页"
 			}
+		},
+		{
+			"path":"pages/contact/contact"
+		},
+		{
+			"path":"pages/detail/detail"
 		}
 	],
 	"globalStyle": {
@@ -24,20 +30,38 @@
 		}
 	},
 	"tabBar": {
-	    "color": "#7A7E83",
-	    "selectedColor": "#3cc51f",
-	    "borderStyle": "black",
-	    "backgroundColor": "#ffffff",
+	    "color": "#7A7E83",//未选中文字颜色
+	    "selectedColor": "#3cc51f",//选中文字颜色
+	    "borderStyle": "black",//上边框颜色
+	    "backgroundColor": "#ffffff",//背景色
 	    "list": [{
-	        "pagePath": "pages/component/index",
-	        "iconPath": "static/image/icon_component.png",
-	        "selectedIconPath": "static/image/icon_component_HL.png",
-	        "text": "组件"
+	        "pagePath": "pages/index/index",
+	        "iconPath": "static/tabs/home.png",
+	        "selectedIconPath": "static/tabs/home-active.png",
+	        "text": "首页"
 	    }, {
-	        "pagePath": "pages/API/index",
-	        "iconPath": "static/image/icon_API.png",
-	        "selectedIconPath": "static/image/icon_API_HL.png",
-	        "text": "接口"
-	    }]
+	        "pagePath": "pages/message/message",
+	        "iconPath": "static/tabs/message.png",
+	        "selectedIconPath": "static/tabs/message-active.png",
+	        "text": "信息"
+	    },
+		{
+		    "pagePath": "pages/contact/contact",
+		    "iconPath": "static/tabs/contact.png",
+		    "selectedIconPath": "static/tabs/contact-active.png",
+		    "text": "我们"
+		}
+		]
+		
+	},
+	"condition":{//用于调试，模拟直达页面的场景
+		"current":0,
+		"list":[
+			{
+				"name":"详情页",
+				"path":"pages/detail/detail",
+				"query":"id=80"
+			}
+		]
 	}
 }

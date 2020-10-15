@@ -16,7 +16,7 @@
       "ServerName": "mysql39",
       "ServerType": "MySql",
       "ConnectionString": "server=39.98.138.165;User Id=root;password=QingHong123!@#;Database=ocmanage",
-      "IsUse": false
+      "IsUse": true
     },
     {
       "ServerName": "DM_MySql",
@@ -28,7 +28,7 @@
       "ServerName": "HJH_MySql",
       "ServerType": "MySql",
       "ConnectionString": "server=39.99.184.140;User Id=root;password=QingHong123!@#;Database=basic_service",
-      "IsUse": true
+      "IsUse": false
     }
   ]
 }

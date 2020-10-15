@@ -601,5 +601,55 @@ namespace FBCodeProduce.Forms
 
             tb_result.Text = CreateBLL(dbName, tableName)
 ;        }
+        #region vue
+        private void btn_table_Click(object sender, EventArgs e)
+        {
+            string dbName = cb_dbs.SelectedValue.ToString();
+            string tableName = cb_tables.SelectedValue.ToString();
+            DataTable dt = MySqlDbHelper.GetTableColums(dbName, tableName);
+            StringBuilder result = new StringBuilder();
+            result.Append($"<el-table :data=\"{tableName}List\" stripe border fit> \r\n");
+            result.Append(" ".repeat(4) + $"<el-table-column type=\"index\" label=\"序号\"></el-table-column> \r\n");
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                //var ss = appSetting["DataTypeComtrast"].Children()["Mysql"];
+                string typeString = GetTypeString(dt.Rows[i]);
+
+                result.Append(" ".repeat(8) + $"<el-table-column prop=\"{dt.Rows[i]["列名"]}\" label=\"{dt.Rows[i]["注释"]}\" ></el-table-column>\r\n");
+            }
+            result.Append($"</el-table> \r\n");
+            tb_result.Text = result.ToString();
+        }
+        private void btn_mockJson_Click(object sender, EventArgs e)
+        {
+            string dbName = cb_dbs.SelectedValue.ToString();
+            string tableName = cb_tables.SelectedValue.ToString();
+            DataTable dt = MySqlDbHelper.GetTableColums(dbName, tableName);
+            StringBuilder result = new StringBuilder();
+            
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                //var ss = appSetting["DataTypeComtrast"].Children()["Mysql"];
+                string typeString = GetTypeString(dt.Rows[i]);
+                string mockValue = "";
+                switch (typeString)
+                {
+                    case "string":
+                        mockValue = "@string";break;
+                    case "int?":
+                        mockValue = "@integer"; break;
+                    case "DateTime?":
+                        mockValue = "@date"; break;
+                    default:
+                        break;
+                }
+                result.Append($"{dt.Rows[i]["列名"]}: '{mockValue}', \r\n");
+            }
+            
+            tb_result.Text = result.ToString();
+        }
+        #endregion
+
+
     }
 }
