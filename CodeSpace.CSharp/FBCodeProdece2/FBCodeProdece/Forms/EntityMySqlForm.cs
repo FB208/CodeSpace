@@ -614,9 +614,16 @@ namespace FBCodeProduce.Forms
             {
                 //var ss = appSetting["DataTypeComtrast"].Children()["Mysql"];
                 string typeString = GetTypeString(dt.Rows[i]);
-
-                result.Append(" ".repeat(8) + $"<el-table-column prop=\"{dt.Rows[i]["列名"]}\" label=\"{dt.Rows[i]["注释"]}\" ></el-table-column>\r\n");
+                string label = string.IsNullOrWhiteSpace(dt.Rows[i]["注释"] + "") ? (dt.Rows[i]["注释"]+"").Split('|')[0] : dt.Rows[i]["列名"]+"";
+                result.Append(" ".repeat(4) + $"<el-table-column prop=\"{dt.Rows[i]["列名"]}\" label=\"{label}\" ></el-table-column>\r\n");
             }
+            result.Append(" ".repeat(4) + $"<el-table-column label=\"操作\" align=\"center\" width=\"300\"> \r\n");
+            result.Append(" ".repeat(8) + $"<template> \r\n");
+            result.Append(" ".repeat(12) + $"<el-button size=\"mini\" type=\"primary\">查看</el-button> \r\n");
+            result.Append(" ".repeat(12) + $"<el-button size=\"mini\" type=\"success\">修改</el-button> \r\n");
+            result.Append(" ".repeat(12) + $"<el-button size=\"mini\" type=\"danger\" >删除</el-button> \r\n");
+            result.Append(" ".repeat(8) + $"</template> \r\n");
+            result.Append(" ".repeat(4) + $"</el-table-column> \r\n");
             result.Append($"</el-table> \r\n");
             tb_result.Text = result.ToString();
         }
