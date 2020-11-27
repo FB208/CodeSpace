@@ -35,7 +35,9 @@
             this.btn_forfolder = new System.Windows.Forms.Button();
             this.btn_model = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btn_entity = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btn_mockJson = new System.Windows.Forms.Button();
             this.btn_table = new System.Windows.Forms.Button();
             this.tb_namespace = new System.Windows.Forms.TextBox();
             this.cb_tables = new System.Windows.Forms.ComboBox();
@@ -44,9 +46,11 @@
             this.tb_result = new System.Windows.Forms.TextBox();
             this.cb_dbs = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.btn_mockJson = new System.Windows.Forms.Button();
+            this.tb_projectPath = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,6 +120,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.btn_entity);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -123,6 +128,17 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "JAVA";
             this.tabPage2.UseWaitCursor = true;
+            // 
+            // btn_entity
+            // 
+            this.btn_entity.Location = new System.Drawing.Point(6, 6);
+            this.btn_entity.Name = "btn_entity";
+            this.btn_entity.Size = new System.Drawing.Size(75, 23);
+            this.btn_entity.TabIndex = 0;
+            this.btn_entity.Text = "Entity";
+            this.btn_entity.UseVisualStyleBackColor = true;
+            this.btn_entity.UseWaitCursor = true;
+            this.btn_entity.Click += new System.EventHandler(this.btn_entity_Click);
             // 
             // tabPage3
             // 
@@ -135,6 +151,16 @@
             this.tabPage3.Size = new System.Drawing.Size(1154, 116);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "VUE";
+            // 
+            // btn_mockJson
+            // 
+            this.btn_mockJson.Location = new System.Drawing.Point(87, 6);
+            this.btn_mockJson.Name = "btn_mockJson";
+            this.btn_mockJson.Size = new System.Drawing.Size(75, 23);
+            this.btn_mockJson.TabIndex = 1;
+            this.btn_mockJson.Text = "MockJson";
+            this.btn_mockJson.UseVisualStyleBackColor = true;
+            this.btn_mockJson.Click += new System.EventHandler(this.btn_mockJson_Click);
             // 
             // btn_table
             // 
@@ -206,21 +232,29 @@
             this.label3.TabIndex = 17;
             this.label3.Text = "命名空间：";
             // 
-            // btn_mockJson
+            // tb_projectPath
             // 
-            this.btn_mockJson.Location = new System.Drawing.Point(87, 6);
-            this.btn_mockJson.Name = "btn_mockJson";
-            this.btn_mockJson.Size = new System.Drawing.Size(75, 23);
-            this.btn_mockJson.TabIndex = 1;
-            this.btn_mockJson.Text = "MockJson";
-            this.btn_mockJson.UseVisualStyleBackColor = true;
-            this.btn_mockJson.Click += new System.EventHandler(this.btn_mockJson_Click);
+            this.tb_projectPath.Location = new System.Drawing.Point(281, 38);
+            this.tb_projectPath.Name = "tb_projectPath";
+            this.tb_projectPath.Size = new System.Drawing.Size(131, 21);
+            this.tb_projectPath.TabIndex = 18;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(213, 45);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(65, 12);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "导出路径：";
             // 
             // EntityMySqlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 732);
+            this.Controls.Add(this.tb_projectPath);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.tb_namespace);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cb_dbs);
@@ -235,6 +269,7 @@
             this.Load += new System.EventHandler(this.EntityMySqlForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -260,5 +295,8 @@
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btn_table;
         private System.Windows.Forms.Button btn_mockJson;
+        private System.Windows.Forms.Button btn_entity;
+        private System.Windows.Forms.TextBox tb_projectPath;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -655,8 +655,21 @@ namespace FBCodeProduce.Forms
             
             tb_result.Text = result.ToString();
         }
+
         #endregion
 
+
+        #region JAVA
+        /// <summary>
+        /// 生成实体
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_entity_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
 
     }
 }
