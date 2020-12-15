@@ -17,8 +17,8 @@ namespace FBCodeProduce
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new EntityMySqlForm());
-            Application.Run(new SpeechForm());
+            //Application.Run(new EntityMSSqlServerForm());
+            Application.Run(new EntityMySqlForm());
         }
     }
 }

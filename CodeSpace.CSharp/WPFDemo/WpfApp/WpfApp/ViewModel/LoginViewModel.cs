@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using WpfApp.Common;
+using WpfApp.DataAccess;
+using WpfApp.Helper;
 using WpfApp.Model;
 
 namespace WpfApp.ViewModel
@@ -51,16 +53,23 @@ namespace WpfApp.ViewModel
                 this.ErrorMessage = "用户名不能为空";
                 return;
             }
-            if (string.IsNullOrWhiteSpace(loginModel.Password))
-            {
-                this.ErrorMessage = "密码不能为空";
-                return;
-            }
+            //if (string.IsNullOrWhiteSpace(loginModel.Password))
+            //{
+            //    this.ErrorMessage = "密码不能为空";
+            //    return;
+            //}
             if (string.IsNullOrWhiteSpace(loginModel.ValidationCode))
             {
                 this.ErrorMessage = "验证码不能为空";
                 return;
             }
+            GlobalValues.UserInfo = DapperHelper<Users>.QueryFirstOrDefault("select * from users",null);
+            
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                (o as Window).DialogResult = true;
+            }));
+
             //Task.Run()
         }
 

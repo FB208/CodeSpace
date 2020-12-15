@@ -127,7 +127,6 @@
             this.tabPage2.Size = new System.Drawing.Size(1154, 116);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "JAVA";
-            this.tabPage2.UseWaitCursor = true;
             // 
             // btn_entity
             // 
@@ -137,7 +136,6 @@
             this.btn_entity.TabIndex = 0;
             this.btn_entity.Text = "Entity";
             this.btn_entity.UseVisualStyleBackColor = true;
-            this.btn_entity.UseWaitCursor = true;
             this.btn_entity.Click += new System.EventHandler(this.btn_entity_Click);
             // 
             // tabPage3

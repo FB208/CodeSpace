@@ -49,6 +49,7 @@
             this.btn_connect.TabIndex = 0;
             this.btn_connect.Text = "链接";
             this.btn_connect.UseVisualStyleBackColor = true;
+            this.btn_connect.Click += new System.EventHandler(this.btn_connect_Click);
             // 
             // label1
             // 

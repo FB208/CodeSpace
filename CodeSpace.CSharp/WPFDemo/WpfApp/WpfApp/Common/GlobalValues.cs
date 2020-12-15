@@ -8,6 +8,6 @@ namespace WpfApp.Common
 {
     public class GlobalValues
     {
-        public static DataAccess.users UserInfo { get; set; }
+        public static DataAccess.Users UserInfo { get; set; }
     }
 }

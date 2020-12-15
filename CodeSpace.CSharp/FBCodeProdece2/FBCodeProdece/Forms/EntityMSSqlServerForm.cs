@@ -16,5 +16,10 @@ namespace FBCodeProduce.Forms
         {
             InitializeComponent();
         }
+
+        private void btn_connect_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
