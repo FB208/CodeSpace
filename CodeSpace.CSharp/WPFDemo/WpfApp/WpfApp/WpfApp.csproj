@@ -99,8 +99,10 @@
     <Compile Include="Converter\GenderConverter.cs" />
     <Compile Include="DataAccess\Users.cs" />
     <Compile Include="Helper\DapperHelper.cs" />
+    <Compile Include="Model\ClassesModel.cs" />
     <Compile Include="Model\LoginModel.cs" />
     <Compile Include="Model\UserModel.cs" />
+    <Compile Include="ViewModel\FirstPageViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\LoginView.xaml.cs">
