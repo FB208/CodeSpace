@@ -1,64 +1,37 @@
 ﻿using System;
-
-    using System.Net;
-
-    using System.Text;
+using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-    using DotNetty.Buffers;
-
-    using DotNetty.Codecs;
-
-    using DotNetty.Handlers.Logging;
-
-    using DotNetty.Transport.Bootstrapping;
-
-    using DotNetty.Transport.Channels;
-
-    using DotNetty.Transport.Channels.Sockets;
-
-
+using DotNetty.Buffers;
+using DotNetty.Codecs;
+using DotNetty.Handlers.Logging;
+using DotNetty.Transport.Bootstrapping;
+using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 
 namespace DotNettyTest
 {
     class Program
     {
         static async Task RunClientAsync()
-
         {
             var group = new MultithreadEventLoopGroup();
             try
             {
-
                 var bootstrap = new Bootstrap();
-
                 bootstrap
-
                     .Group(group)
-
                     .Channel<TcpSocketChannel>()
-
                     .Option(ChannelOption.TcpNodelay, true)
-
                     .Handler(
-
                         new ActionChannelInitializer<ISocketChannel>(
-
                             channel =>
-
                             {
-
                                 IChannelPipeline pipeline = channel.Pipeline;
-
                                 pipeline.AddLast(new LoggingHandler());
-
                                 //pipeline.AddLast("framing-enc", new LengthFieldPrepender(2));
-
                                 //pipeline.AddLast("framing-dec", new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
-
-
-
                                 pipeline.AddLast("echo", new EchoClientHandler());
 
                             }));
@@ -66,6 +39,7 @@ namespace DotNettyTest
 
 
                 IChannel clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(IPAddress.Parse("192.168.18.126"), 3003));
+
                 if (clientChannel.Active)
                 {
                     Config.isConnected = true;
@@ -129,7 +103,8 @@ namespace DotNettyTest
 
 
 
-        static void Main() {
+        static void Main()
+        {
             Task.Factory.StartNew(() =>
             {
                 while (true)
@@ -146,7 +121,7 @@ namespace DotNettyTest
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("异常"+ex.Message);
+                        Console.WriteLine("异常" + ex.Message);
 
                     }
                     Thread.Sleep(5000);
@@ -155,7 +130,7 @@ namespace DotNettyTest
             }, TaskCreationOptions.LongRunning);
 
             Console.ReadKey();
-            
-        } 
+
+        }
     }
 }

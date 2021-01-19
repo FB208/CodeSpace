@@ -65,13 +65,9 @@ namespace DotNettyTest
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
-
         {
-
             Console.WriteLine("Exception: " + exception);
-
             context.CloseAsync();
-
         }
 
     }
