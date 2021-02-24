@@ -38,7 +38,7 @@ namespace DotNettyTest
 
 
 
-                IChannel clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(IPAddress.Parse("192.168.18.126"), 3003));
+                IChannel clientChannel = await bootstrap.ConnectAsync(new IPEndPoint(IPAddress.Parse("192.168.18.126"), 3399));
 
                 if (clientChannel.Active)
                 {
@@ -47,7 +47,21 @@ namespace DotNettyTest
 
 
                 // 建立死循环，类同于While(true)
+                long index = 1;
+                while (true)
+                {
+                    //if (index==16380)
+                    //{
 
+                    //}
+                    string message = index+ "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
+                    byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+                    IByteBuffer initialMessage = Unpooled.Buffer(1024);
+                    initialMessage.WriteBytes(messageBytes);
+                    await clientChannel.WriteAndFlushAsync(initialMessage);
+                    index++;
+                    Thread.Sleep(10);
+                }
                 for (; ; ) // (4)
 
                 {

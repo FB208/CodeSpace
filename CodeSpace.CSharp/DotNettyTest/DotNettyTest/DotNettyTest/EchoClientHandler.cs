@@ -1,15 +1,12 @@
 ﻿using System;
-
 using System.Text;
-
+using System.Threading;
 using DotNetty.Buffers;
-
 using DotNetty.Transport.Channels;
 
 namespace DotNettyTest
 {
     public class EchoClientHandler : ChannelHandlerAdapter
-
     {
 
         //readonly IByteBuffer initialMessage;
@@ -21,22 +18,30 @@ namespace DotNettyTest
             Console.WriteLine($"连接至服务端{context}.");
 
             //编码成IByteBuffer,发送至服务端
-            string message = "客户端1";
-            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
-            IByteBuffer initialMessage = Unpooled.Buffer(messageBytes.Length);
-            initialMessage.WriteBytes(messageBytes);
 
-            context.WriteAndFlushAsync(initialMessage);
-        } 
+            long index = 1;
+            //while (true)
+            //{
+            //    string message = index.ToString();
+            //    byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            //    IByteBuffer initialMessage = Unpooled.Buffer(messageBytes.Length);
+            //    initialMessage.WriteBytes(messageBytes);
+            //    context.WriteAndFlushAsync(initialMessage);
+            //    index++;
+            //    Thread.Sleep(10);
+            //}
+
+            //context.WriteAndFlushAsync(initialMessage);
+
+
+        }
 
 
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
-
         {
 
             if (message is IByteBuffer byteBuffer)
-
             {
 
                 Console.WriteLine("Received from server: " + byteBuffer.ToString(Encoding.UTF8));
