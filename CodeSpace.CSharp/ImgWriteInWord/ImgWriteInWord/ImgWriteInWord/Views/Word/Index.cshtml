@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+    @model List<WordModel>;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>天津市开发区五处小区安装无线烟感的实地照片</title>
+    <style>
+        .page {
+/*            display: flex;
+            flex-direction: column;
+            height: 1123px;
+            border: 1px solid black;*/
+        }
+
+        .title {
+            margin-top: 20px;
+            position:absolute;
+        }
+
+        .box {
+            /*border: 1px solid black;*/
+            width: 794px;
+            height: 1150px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .imgbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+        }
+
+        .img {
+            width: 320px;
+            height: 460px;
+        }
+    </style>
+</head>
+<body>
+    @*<div style="width: 794px; border: 1px solid black;height:1151px"></div>*@
+    @{
+        string[] indexStr = new string[] { "一、", "二、", "三、", "四、", "五、" };
+        int index = 0;
+    }
+    @foreach (var dir in Model)
+    {
+        int page = dir.fileList.Count / 4 + (dir.fileList.Count % 4 == 0 ? 0 : 1);
+    <div class="page">
+        
+        <div class="title">
+            <span>@indexStr[index] @dir.dirName</span>
+        </div>
+
+
+
+
+        @for (int i = 0; i < page; i++)
+        {
+            <div class="box">
+                @for (int j = 0; j < 4; j++)
+                {
+                    int num = i * 4 + j;
+                    if (num < dir.fileList.Count)
+                    {
+
+
+
+                        <div class="imgbox">
+                            <img src="@Url.Content("~/Asset/"+dir.dirName+"/"+dir.fileList[num])" class="img" />
+                            <span>@dir.fileList[num].Replace("假", "").Replace(".jpg", "")</span>
+                        </div>
+
+
+
+
+                    }
+
+                }
+            </div>
+        }
+
+
+    </div>
+        index++;
+    }
+
+</body>
+</html>

@@ -328,3 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+
+
+# 特定静态文件忽略
+CodeSpace.CSharp/ImgWriteInWord/ImgWriteInWord/ImgWriteInWord/wwwroot/Asset/
